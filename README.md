@@ -4,7 +4,7 @@ A crawler for parsing  and storing Jira issue reports
 ## .py files
 ### 1. Core file: CIR.py   
 This file contains functions for extracting data from Jira issue reports. The key functions include:   
-- **1) Extract(sp, elmnt, strip=1, omit_double_qout=1):** Extracts issue properties from the specified HTML element.  
+**1) Extract(sp, elmnt, strip=1, omit_double_qout=1):** Extracts issue properties from the specified HTML element.  
 - **Inputs:**  
   - sp: A BeautifulSoup object representing the parsed HTML content.
   - elmnt: The HTML element identifier (e.g., tag and/or class) to extract properties from.
@@ -14,7 +14,7 @@ This file contains functions for extracting data from Jira issue reports. The ke
 - **Output:**
   - issue_prop: Extracted issue property as a string. It could be None if the specified HTML element is not found.  
 
-- **2) Crawl_issue_report(url, issue_num):** Fetches an issue report from the given URL and extracts relevant Details, People, Dates, Description, and Comments.
+**2) Crawl_issue_report(url, issue_num):** Fetches an issue report from the given URL and extracts relevant Details, People, Dates, Description, and Comments.
  - **Inputs:**  
   - url: The URL of the Jira issue report to fetch and scrape.
   - issue_num: The issue number associated with the Jira issue report.  
@@ -27,7 +27,7 @@ This file contains functions for extracting data from Jira issue reports. The ke
     - Dates (e.g., Created, Updated, etc.)
     - Description
     - Comments
-- **3) Write_to_CSV(data, CSV_name):** Writes the crawled data to a CSV file.  
+**3) Write_to_CSV(data, CSV_name):** Writes the crawled data to a CSV file.  
  - **Inputs:**  
   - data: The crawled data, typically in the form of a list of dictionaries, where each dictionary represents the data for a single issue report.
   - CSV_name: The base name for the CSV file. 
