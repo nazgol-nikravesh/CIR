@@ -14,6 +14,7 @@ This file contains functions for extracting data from Jira issue reports. The ke
 - **Output:**
   - issue_prop: Extracted issue property as a string. It could be None if the specified HTML element is not found.  
 
+
 **2) Crawl_issue_report(url, issue_num):** Fetches an issue report from the given URL and extracts relevant Details, People, Dates, Description, and Comments.
  - **Inputs:**  
   - url: The URL of the Jira issue report to fetch and scrape.
@@ -26,7 +27,9 @@ This file contains functions for extracting data from Jira issue reports. The ke
     - People (e.g., Assignee, Reporter, etc.)
     - Dates (e.g., Created, Updated, etc.)
     - Description
-    - Comments
+    - Comments   
+
+
 **3) Write_to_CSV(data, CSV_name):** Writes the crawled data to a CSV file.  
  - **Inputs:**  
   - data: The crawled data, typically in the form of a list of dictionaries, where each dictionary represents the data for a single issue report.
