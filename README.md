@@ -39,13 +39,13 @@ This file contains functions for extracting data from Jira issue reports. The ke
   - If successful, the function generates a CSV file named [CSV_name]_issue_report.csv containing the crawled data. It prints a success message.
   - If unsuccessful (e.g., failed to fetch the webpage), it prints an error message.
 
-
+---------------------------------------------------------------------------------------------------------------------------------------
 ### 2. main-BachCrawlingIssueReports.py   
 This file demonstrates the use of CIR.py to crawl multiple Jira issue reports within a specified range and writes the data to a CSV file.
 
  **Output Example:**   
 
-
+---------------------------------------------------------------------------------------------------------------------------------------
 ### 3. mainExample.py   
 This file provides an example of how to use CIR.py to crawl a specific Jira issue report and writes the data to a CSV file.
 
