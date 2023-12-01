@@ -19,7 +19,7 @@ This file contains functions for extracting data from Jira issue reports. The ke
  - **Inputs:**  
   - url: The URL of the Jira issue report to fetch and scrape.
   - issue_num: The issue number associated with the Jira issue report.  
- - **Output:**
+ - **Outputs:**
   - issue_prop: Extracted issue property as a string. It could be None if the specified HTML element is not found. 
   - crawled_data: A dictionary containing various details, people, dates, description, and comments extracted from the Jira issue report. The keys include:
     - Issue#
