@@ -44,13 +44,13 @@ This file contains functions for extracting data from Jira issue reports. The ke
 This file demonstrates the use of CIR.py to crawl multiple Jira issue reports within a specified range and writes the data to a CSV file.
 
  **Output Example:**   
-
+10550_to_10600_issue_report.csv
 ---------------------------------------------------------------------------------------------------------------------------------------
 ### 3. mainExample.py   
 This file provides an example of how to use CIR.py to crawl a specific Jira issue report and writes the data to a CSV file.
 
  **Output Example:**  
-
+example_issue_report.csv
 
 
  **note: run the second and the third files to get the .csv files** 
