@@ -28,7 +28,8 @@ This file contains functions for extracting data from Jira issue reports. The ke
     - Dates (e.g., Created, Updated, etc.)
     - Description
     - Comments => 
-      - To extract comments from Jira issue reports, the JavaScript in the source page is executed by identifying relevant script tags (it could not be accessible directly from HTML text). A headless Chrome browser is used to dynamically load content, including comments, which is then parsed and extracted using BeautifulSoup. 
+      - To extract comments from Jira issue reports, the JavaScript in the source page is executed by identifying relevant script tags (which can not be directly accessible from HTML text). A headless Chrome browser is employed to dynamically load content, including comments. Subsequently, the loaded content is parsed and extracted using BeautifulSoup.   
+      - All other properties, excluding Comments, can be directly extracted from the pure HTML of the issue report web page.
 
 
 **3) Write_to_CSV(data, CSV_name):** Writes the crawled data to a CSV file.  
