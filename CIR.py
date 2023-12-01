@@ -5,8 +5,20 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 
+def Extract(sp, elmnt, strip=1, omit_double_qout=1):
+    # Issue properties extracting function
+    element = sp.select_one(elmnt)
+    if strip!=1 and omit_double_qout!=1:
+        issue_prop = element.text if element else None
+    elif strip!=1 and omit_double_qout==1:
+        issue_prop = element.text.replace('"', '') if element else None
+    elif strip==1 and omit_double_qout!=1:
+        issue_prop = element.text.strip() if element else None
+    else:
+        issue_prop = element.text.strip().replace('"', '') if element else None
+    return issue_prop
 def Crawl_issue_report(url, issue_num):
-    # Fetch the issue report
+    # Fetching the issue report
     response = requests.get(url)
 
     if response.status_code == 200:
@@ -15,59 +27,29 @@ def Crawl_issue_report(url, issue_num):
 
 
         # Extracting Details
-        issue_type_element = soup.select_one('span[id="type-val"]')
-        issue_type = issue_type_element.text.strip().replace('"', '') if issue_type_element else None
-
-        issue_status_element = soup.select_one('span[id="status-val"]')
-        issue_status = issue_status_element.text.strip().replace('"', '') if issue_status_element else None
-
-        issue_priority_element = soup.select_one('span[id="priority-val"]')
-        issue_priority = issue_priority_element.text.strip().replace('"', '') if issue_priority_element else None
-
-        issue_resolution_element = soup.select_one('span[id="resolution-val"]')
-        issue_resolution = issue_resolution_element.text.strip().replace('"', '') if issue_resolution_element else None
-
-        issue_affects_version_element = soup.select_one('span[id="versions-field"]')
-        issue_affects_version = issue_affects_version_element.text.strip().replace('"', '') if issue_affects_version_element else None
-
-        issue_fix_version_element = soup.select_one('span[id="fixVersions-field"]')
-        issue_fix_version = issue_fix_version_element.text.strip().replace('"','') if issue_fix_version_element else None
-
-        issue_component_element = soup.select_one('span[id="components-val"]')
-        issue_component = issue_component_element.text.strip().replace('"', '') if issue_component_element else None
-
-        issue_labels_element = soup.select_one('div[class="labels-wrap value"]')
-        issue_labels = issue_labels_element.text.strip().replace('"', '') if issue_labels_element else None
-
-        issue_estimated_complexity_element = soup.select_one('div[class ="value type-select"]')
-        issue_estimated_complexity = issue_estimated_complexity_element.text.strip().replace('"', '') if issue_estimated_complexity_element else None
+        issue_type = Extract(soup, 'span[id="type-val"]')
+        issue_status = Extract(soup, 'span[id="status-val"]')
+        issue_priority = Extract(soup, 'span[id="priority-val"]')
+        issue_resolution = Extract(soup, 'span[id="resolution-val"]')
+        issue_affects_version = Extract(soup, 'span[id="versions-field"]')
+        issue_fix_version = Extract(soup, 'span[id="fixVersions-field"]')
+        issue_component = Extract(soup, 'span[id="components-val"]')
+        issue_labels = Extract(soup, 'div[class="labels-wrap value"]')
+        issue_estimated_complexity = Extract(soup, 'div[class ="value type-select"]')
 
         # Extracting People
-        assignee_element = soup.select_one('span[id="assignee-val"]')
-        assignee = assignee_element.text.strip().replace('"', '') if assignee_element else None
-
-        reporter_element = soup.select_one('span[id="reporter-val"]')
-        reporter = reporter_element.text.strip().replace('"', '') if reporter_element else None
-
-        votes_element = soup.select_one('aui-badge[id="vote-data"]')
-        votes = votes_element.text.strip().replace('"', '') if votes_element else None
-
-        watchers_element = soup.select_one('aui-badge[id="watcher-data"]')
-        watchers = watchers_element.text.strip().replace('"', '') if watchers_element else None
+        assignee = Extract(soup, 'span[id="assignee-val"]')
+        reporter = Extract(soup, 'span[id="reporter-val"]')
+        votes = Extract(soup, 'aui-badge[id="vote-data"]')
+        watchers = Extract(soup, 'aui-badge[id="watcher-data"]')
 
         # Extracting Date
-        created_element = soup.select_one('span[id="created-val"]')
-        created = created_element.text.strip().replace('"', '') if created_element else None
-
-        updated_element = soup.select_one('span[id="updated-val"]')
-        updated = updated_element.text.strip().replace('"', '') if updated_element else None
-
-        resolved_element = soup.select_one('span[id="resolutiondate-val"]')
-        resolved = resolved_element.text.strip().replace('"', '') if resolved_element else None
+        created = Extract(soup, 'span[id="created-val"]')
+        updated = Extract(soup, 'span[id="updated-val"]')
+        resolved = Extract(soup, 'span[id="resolutiondate-val"]')
 
         # Extracting Description
-        description_element = soup.select_one('div[id="description-val"]')
-        description = description_element.text if description_element else None
+        description = Extract(soup, 'div[id="description-val"]', 0, 0)
 
         # Extracting Comments
         for scr in soup.findAll("script"):
@@ -83,10 +65,7 @@ def Crawl_issue_report(url, issue_num):
                 html_comment = driver.page_source
 
         soup_comment = BeautifulSoup(html_comment, 'html.parser')
-
-        comments_element = soup_comment.select_one('div[id="issue_actions_container"]')
-        comments = comments_element.text if comments_element else None
-
+        comments = Extract(soup_comment, 'div[id="issue_actions_container"]', 0, 0)
 
         crawled_data={
                 'Issue#': issue_num,
