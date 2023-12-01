@@ -1,0 +1,4588 @@
+Issue#,Type,Status,Priority,Resolution,Affects Version/s,Fix Version/s,Component/s,Labels,Estimated Complexity,Assignee,Reporter,Number of Votes,Number of Watchers,Created,Updated,Resolved,Description,Comments
+10550,Improvement,Resolved,Minor,Fixed,,"2.18.2,                                            2.19.0",camel-spring-boot,None,Unknown,Luca Burgazzoli,Luca Burgazzoli,0,1,12/2/2016 16:23,12/6/2016 16:25,12/6/2016 16:25,,"
+
+    There are no comments yet on this issue.
+ "
+10551,Improvement,Resolved,Major,Fixed,,"2.18.2,                                            2.19.0",camel-spring-boot,None,Unknown,Luca Burgazzoli,Luca Burgazzoli,0,1,12/3/2016 10:52,8/5/2017 21:18,12/6/2016 16:25,,"
+
+    There are no comments yet on this issue.
+ "
+10552,Improvement,Resolved,Major,Fixed,,"2.18.2,                                            2.19.0",camel-spring-boot,None,Unknown,Luca Burgazzoli,Luca Burgazzoli,0,1,12/3/2016 17:33,12/6/2016 16:26,12/6/2016 16:26,,"
+
+    There are no comments yet on this issue.
+ "
+10553,Task,Resolved,Minor,Fixed,,2.19.0,documentation,None,Unknown,Claus Ibsen,Alexandru Enache,0,2,12/3/2016 20:08,12/4/2016 13:44,12/4/2016 13:44,"
+
+When navigating to http://camel.apache.org/components.html and trying to click the links in the description column of ""CXF / camel-cxf"" and ""CXFRS / camel-cxf"" components I'm being taken to http://apache.org/cxf/ (which is not found).
+Maybe the path should actually be http://cxf.apache.org/ (not sure about this though)?
+I don't have access to edit the page so I raised this ticket.
+
+","
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 04/Dec/16 13:44 
+
+Thanks for reporting 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 04/Dec/16 13:44                    Thanks for reporting              
+
+
+
+"
+10554,Improvement,Resolved,Minor,Fixed,2.19.0,2.19.0,camel-mongodb,None,Unknown,Andrea Cosentino,Terrien Jean-Yves,0,3,12/3/2016 20:19,12/20/2016 12:44,12/20/2016 12:44,"
+
+Hi, 
+The mongodb driver has changed in its foundation. 
+It is recommended not to use many classes of the verion 2 still present in the driver. 
+This is the case with DBObject, which is the basis for the configuration of the camel component. 
+I'm working on the evolution of this component to use the new classes of version 3, like ""Document"". 
+I've created à patch (no completed)
+A+JYT
+
+","
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 03/Dec/16 20:21 
+
+Patch to use mongo 3 API. 
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 03/Dec/16 20:21                    Patch to use mongo 3 API.              
+
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 04/Dec/16 08:47 
+
+I was looking at the patch
+
++//    /**
++//     * Check if outputType is compatible with operation. DbCursor and DBObjectList applies to findAll. DBObject applies to others.
++//     */
++//    private void validateOutputType() {
++//        if (!ObjectHelper.isEmpty(outputType)) {
++//            if (MongoDbOutputType.DBObjectList.equals(outputType) && !(MongoDbOperation.findAll.equals(operation))) {
++//                throw new IllegalArgumentException(""outputType DBObjectList is only compatible with operation findAll"");
++//            }
++//            if (MongoDbOutputType.DBCursor.equals(outputType) && !(MongoDbOperation.findAll.equals(operation))) {
++//                throw new IllegalArgumentException(""outputType DBCursor is only compatible with operation findAll"");
++//            }
++//            if (MongoDbOutputType.DBObject.equals(outputType) && (MongoDbOperation.findAll.equals(operation))) {
++//                throw new IllegalArgumentException(""outputType DBObject is not compatible with operation findAll"");
++//            }
++//        }
++//    }
+
+
+I see you're commenting this method and also
+
++//        if (writeConcern != null) {
++//            mongoConnection.setWriteConcern(writeConcern);
++//        } else if (writeConcernRef != null) {
++//            mongoConnection.setWriteConcern(writeConcernRef);
++//        }
++//
++//        // Set the ReadPreference
++//        if (readPreference != null) {
++//            mongoConnection.setReadPreference(readPreference);
++//        }
+
+
+the writeConcern settings. These parameter are URI params from the endpoint configuration, so if we don't need the anymore maybe we have to deprecate them or remove them, but I think it is just because this patch is work in progress. 
+Since this seems to be a big change in the component, may I ask you to open a Pull Request on Github if you can? This way we can review the code in an easier way. If you can't I'll wait for the complete patch. 
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 04/Dec/16 08:47                    I was looking at the patch 
+
+  
+ + //    /**
+ + //     * Check  if  outputType is compatible with operation. DbCursor and DBObjectList applies to findAll. DBObject applies to others.
+ + //     */
+ + //     private  void validateOutputType() {
+ + //         if  (!ObjectHelper.isEmpty(outputType)) {
+ + //             if  (MongoDbOutputType.DBObjectList.equals(outputType) && !(MongoDbOperation.findAll.equals(operation))) {
+ + //                 throw   new  IllegalArgumentException( ""outputType DBObjectList is only compatible with operation findAll"" );
+ + //            }
+ + //             if  (MongoDbOutputType.DBCursor.equals(outputType) && !(MongoDbOperation.findAll.equals(operation))) {
+ + //                 throw   new  IllegalArgumentException( ""outputType DBCursor is only compatible with operation findAll"" );
+ + //            }
+ + //             if  (MongoDbOutputType.DBObject.equals(outputType) && (MongoDbOperation.findAll.equals(operation))) {
+ + //                 throw   new  IllegalArgumentException( ""outputType DBObject is not compatible with operation findAll"" );
+ + //            }
+ + //        }
+ + //    } 
+ 
+  
+
+ I see you're commenting this method and also 
+
+  
+ + //         if  (writeConcern !=  null ) {
+ + //            mongoConnection.setWriteConcern(writeConcern);
+ + //        }  else   if  (writeConcernRef !=  null ) {
+ + //            mongoConnection.setWriteConcern(writeConcernRef);
+ + //        }
+ + //
+ + //        // Set the ReadPreference
+ + //         if  (readPreference !=  null ) {
+ + //            mongoConnection.setReadPreference(readPreference);
+ + //        } 
+ 
+  
+
+ the writeConcern settings. These parameter are URI params from the endpoint configuration, so if we don't need the anymore maybe we have to deprecate them or remove them, but I think it is just because this patch is work in progress.  
+
+ Since this seems to be a big change in the component, may I ask you to open a Pull Request on Github if you can? This way we can review the code in an easier way. If you can't I'll wait for the complete patch.              
+
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 04/Dec/16 10:01 
+
+this parameters are déprecated and  are no effect on driver v3
+void	setOptions(int options)
+Deprecated. 
+Set options on instances of DBCursor
+void	setReadPreference(ReadPreference readPreference)
+Deprecated. 
+Set the default read preference with either MongoClientURI or MongoClientOptions
+void	setWriteConcern(WriteConcern writeConcern)
+Deprecated. 
+Set the default write concern with either MongoClientURI or MongoClientOptions
+void	slaveOk()
+Deprecated. 
+Replaced with ReadPreference.secondaryPreferred()
+I'm working to solve this problem.
+In the new version you should put these options on the mongoClient bean and not put them on the camel url.
+    <bean id=""mongoBean"" class=""com.mongodb.MongoClient"">
+        <constructor-arg name=""host"" value=""${mongodb.host}"" />
+        <constructor-arg name=""port"" value=""${mongodb.port}"" />
+    </bean>
+Bye. 
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 04/Dec/16 10:01                    this parameters are déprecated and  are no effect on driver v3 
+
+ void	setOptions(int options) 
+Deprecated.  
+Set options on instances of DBCursor 
+void	setReadPreference(ReadPreference readPreference) 
+Deprecated.  
+Set the default read preference with either MongoClientURI or MongoClientOptions 
+void	setWriteConcern(WriteConcern writeConcern) 
+Deprecated.  
+Set the default write concern with either MongoClientURI or MongoClientOptions 
+void	slaveOk() 
+Deprecated.  
+Replaced with ReadPreference.secondaryPreferred() 
+
+ I'm working to solve this problem. 
+In the new version you should put these options on the mongoClient bean and not put them on the camel url. 
+    <bean id=""mongoBean"" class=""com.mongodb.MongoClient""> 
+        <constructor-arg name=""host"" value=""${mongodb.host}"" /> 
+        <constructor-arg name=""port"" value=""${mongodb.port}"" /> 
+    </bean> 
+
+ Bye.              
+
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 04/Dec/16 10:08 
+
+In the camel component configuration an option is outputType which is implemented as a MongoDbOutputType enumeration 
+The values ​​are DBObjectList, DBObject, DBCursor which matches in the new API to List<Document>, Document, MongoIterable 
+I do not know what to do. This configuration is purely camel 
+I can keep the enumeration values ​​and use the new classes 
+Or define three new values (DocumentList, Document, MongoIterable) ​​and using the new classes. 
+In the first case the values ​​of the option does not have a name to refer to the mongo API but remains compatible with the previous versions of camel-mongodb. 
+In the second the values ​​correspond to the mongo API but are no longer compatible with the previous versions. 
+A+JYT 
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 04/Dec/16 10:08                    In the camel component configuration an option is outputType which is implemented as a MongoDbOutputType enumeration  
+The values ​​are DBObjectList, DBObject, DBCursor which matches in the new API to List<Document>, Document, MongoIterable  
+
+ I do not know what to do. This configuration is purely camel  
+I can keep the enumeration values ​​and use the new classes  
+Or define three new values (DocumentList, Document, MongoIterable) ​​and using the new classes.  
+
+ In the first case the values ​​of the option does not have a name to refer to the mongo API but remains compatible with the previous versions of camel-mongodb.  
+In the second the values ​​correspond to the mongo API but are no longer compatible with the previous versions.  
+
+ A+JYT              
+
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 04/Dec/16 10:33 
+
+Lets wait for some feedback from users on the mailing list  
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 04/Dec/16 10:33                    Lets wait for some feedback from users on the mailing list                
+
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 04/Dec/16 16:33 
+
+readPreference writeConcern 
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 04/Dec/16 16:33                    readPreference writeConcern              
+
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 11/Dec/16 14:24 
+
+Using Filters class
+Adding FIELDS_FILTER headers on update operation
+Update documentation
+Change  MongoDbOutputType to
+    DocumentList, //List<Document>
+    Document, //Document
+    MongoIterable //MongoIterable
+Using Bson class instead of Document when is possible (more generic)
+Work in progress
+Using more generic classes (like Bson)
+Study of the use of MongoCollection<TDocument> where TDocument is generic parameter. 
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 11/Dec/16 14:24                    Using Filters class 
+Adding FIELDS_FILTER headers on update operation 
+Update documentation 
+Change  MongoDbOutputType to 
+    DocumentList, //List<Document> 
+    Document, //Document 
+    MongoIterable //MongoIterable 
+Using Bson class instead of Document when is possible (more generic) 
+
+ Work in progress 
+Using more generic classes (like Bson) 
+Study of the use of MongoCollection<TDocument> where TDocument is generic parameter.              
+
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 11/Dec/16 14:41 
+
+Do you create a new camel component only for mongo versione 3.x? 
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 11/Dec/16 14:41                    Do you create a new camel component only for mongo versione 3.x?              
+
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 11/Dec/16 19:14   - edited 
+
+For Mongo Java Driver 3.x
+mongo drivers support mongo versions
+MongoDB Ver|2.4|2.6|3.0|3.2|3.4
+Version | 3.4. |     ✓         |             ✓       |                 ✓       |                 ✓             |           ✓
+Version |         3.3.    |      ✓         |             ✓        |                ✓        |                ✓	 |
+Version |        3.2.     |     ✓          |            ✓        |                ✓        |                ✓	 |
+Version |        2.14   |     ✓          |            ✓        |                ✓        |                ✓ [*]	| 
+The V2 driver does not support more version than the V3 driver.
+I don't have tested with mongo 2.x
+A+JYT 
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 11/Dec/16 19:14   - edited                   For Mongo Java Driver 3.x 
+mongo drivers support mongo versions 
+MongoDB Ver|2.4|2.6|3.0|3.2|3.4 
+Version | 3.4. |     ✓         |             ✓       |                 ✓       |                 ✓             |           ✓ 
+Version |         3.3.    |      ✓         |             ✓        |                ✓        |                ✓	 | 
+Version |        3.2.     |     ✓          |            ✓        |                ✓        |                ✓	 | 
+Version |        2.14   |     ✓          |            ✓        |                ✓        |                ✓  [*] 	|  
+
+ The V2 driver does not support more version than the V3 driver. 
+I don't have tested with mongo 2.x 
+A+JYT              
+
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 11/Dec/16 19:51 
+
+In the mailing list we suggested you to create a new component (camel-mongodb3) with the features from driver V3. This way we will be able to avoid problem of breaking changes for end users.
+Are you follow this idea? 
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 11/Dec/16 19:51                    In the mailing list we suggested you to create a new component (camel-mongodb3) with the features from driver V3. This way we will be able to avoid problem of breaking changes for end users. 
+
+ Are you follow this idea?              
+
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 12/Dec/16 08:55 
+
+Yes
+I'll stabilize the code.
+Remove options from previous versions in doc. (Put references to camel-mongodb)
+And create the camel-mongo3 component 
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 12/Dec/16 08:55                    Yes 
+I'll stabilize the code. 
+Remove options from previous versions in doc. (Put references to camel-mongodb) 
+And create the camel-mongo3 component              
+
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 14/Dec/16 08:41 
+
+Hi.
+I've renamed the camel-mongodb3 component.
+What is the right method? Do I have to rename exported packages?
+Like org.apache.camel.component.mongodb => org.apache.camel.component.mongodb3
+A+JYT 
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 14/Dec/16 08:41                    Hi. 
+I've renamed the camel-mongodb3 component. 
+What is the right method? Do I have to rename exported packages? 
+Like org.apache.camel.component.mongodb => org.apache.camel.component.mongodb3 
+
+ A+JYT              
+
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 14/Dec/16 09:03 
+
+You don't have to rename camel-mongodb component to camel-mongodb3.
+You have to create another folder with another component named camel-mongodb3.
+Thanks for your effort 
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 14/Dec/16 09:03                    You don't have to rename camel-mongodb component to camel-mongodb3. 
+
+ You have to create another folder with another component named camel-mongodb3. 
+
+ Thanks for your effort              
+
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 14/Dec/16 12:43 
+
+Sorry I've moved my code to camel-mongodb3.
+Should the package be ""org.apache.camel.component.mongodb"" or ""org.apache.camel.component.mongodb3""?
+I am afraid that if I leave ""org.apache.camel.component.mongodb"", there will be conflicts, if the two components are imported.
+Bye 
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 14/Dec/16 12:43                    Sorry I've moved my code to camel-mongodb3. 
+Should the package be ""org.apache.camel.component.mongodb"" or ""org.apache.camel.component.mongodb3""? 
+I am afraid that if I leave ""org.apache.camel.component.mongodb"", there will be conflicts, if the two components are imported. 
+
+ Bye              
+
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 14/Dec/16 12:47 
+
+It's better ""org.apache.camel.component.mongodb3"" 
+Thanks 
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 14/Dec/16 12:47                    It's better ""org.apache.camel.component.mongodb3""   
+
+ Thanks              
+
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 14/Dec/16 21:56 
+
+Good evening,
+I think this version is complete enough to create the component in the repository.
+I have a problem on my Mac
+The camel-mongodb project in the master version has tests that fail.
+testPersistentTailTrack
+testPersistentTailTrackIncreasingDateField
+testCustomTailTrackLocation
+The same tests with the same errors fail in the camel-mongodb3 project
+I posted on the list but it seems that the build works.
+I could not fix problem on the master.
+And so I can not test these cases in the new component.
+cordially
+PS: I'll have to get familiar with Git. I usually use SVN. 
+
+
+
+
+
+
+
+ Terrien Jean-Yves
+ added a comment  - 14/Dec/16 21:56                    Good evening, 
+I think this version is complete enough to create the component in the repository. 
+
+ I have a problem on my Mac 
+The camel-mongodb project in the master version has tests that fail. 
+testPersistentTailTrack 
+testPersistentTailTrackIncreasingDateField 
+testCustomTailTrackLocation 
+The same tests with the same errors fail in the camel-mongodb3 project 
+I posted on the list but it seems that the build works. 
+
+ I could not fix problem on the master. 
+And so I can not test these cases in the new component. 
+
+ cordially 
+PS: I'll have to get familiar with Git. I usually use SVN.              
+
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 17/Dec/16 13:38 
+
+I'm starting merging process. 
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 17/Dec/16 13:38                    I'm starting merging process.              
+
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 18/Dec/16 09:15 
+
+Thanks. The component is merged  
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 18/Dec/16 09:15                    Thanks. The component is merged                
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 20/Dec/16 12:43 
+
+Is there more work needed on this? 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 20/Dec/16 12:43                    Is there more work needed on this?              
+
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 20/Dec/16 12:44 
+
+I forget to close the JIRA. Sorry.
+Maybe we need to create a page on the website. 
+
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 20/Dec/16 12:44                    I forget to close the JIRA. Sorry. 
+
+ Maybe we need to create a page on the website.  
+             
+
+
+
+"
+10555,Bug,Resolved,Minor,Fixed,,2.19.0,karaf,None,Unknown,Claus Ibsen,Claus Ibsen,0,1,12/4/2016 12:32,12/4/2016 14:29,12/4/2016 14:29,"
+
+This error happens
+
+2016-12-04 13:30:56,747 | ERROR | nsole user karaf | ShellUtil                        | 43 - org.apache.karaf.shell.core - 4.0.7 | Exception caught while executing command
+javax.xml.transform.TransformerFactoryConfigurationError: Provider org.apache.xalan.processor.TransformerFactoryImpl not found
+	at javax.xml.transform.TransformerFactory.newInstance(TransformerFactory.java:121)[:2.7.0]
+	at org.apache.camel.converter.jaxp.XmlConverter.createTransformerFactory(XmlConverter.java:1173)
+	at org.apache.camel.converter.jaxp.XmlConverter.getTransformerFactory(XmlConverter.java:1063)
+	at org.apache.camel.converter.jaxp.XmlConverter.createTransformer(XmlConverter.java:1168)
+	at org.apache.camel.converter.jaxp.XmlConverter.toResult(XmlConverter.java:127)
+	at org.apache.camel.converter.jaxp.XmlConverter.toStringFromDocument(XmlConverter.java:299)
+	at org.apache.camel.model.ModelHelper.dumpModelAsXml(ModelHelper.java:107)
+	at org.apache.camel.commands.AbstractLocalCamelController.getRestModelAsXml(AbstractLocalCamelController.java:414)
+	at org.apache.camel.commands.RestShowCommand.performContextCommand(RestShowCommand.java:32)
+	at org.apache.camel.commands.AbstractContextCommand.executeLocal(AbstractContextCommand.java:74)
+	at org.apache.camel.commands.AbstractContextCommand.execute(AbstractContextCommand.java:42)
+	at org.apache.camel.karaf.commands.RestShow.execute(RestShow.java:38)
+	at org.apache.karaf.shell.impl.action.command.ActionCommand.execute(ActionCommand.java:83)[43:org.apache.karaf.shell.core:4.0.7]
+	at org.apache.karaf.shell.impl.console.osgi.secured.SecuredCommand.execute(SecuredCommand.java:67)[43:org.apache.karaf.shell.core:4.0.7]
+	at org.apache.karaf.shell.impl.console.osgi.secured.SecuredCommand.execute(SecuredCommand.java:87)[43:org.apache.karaf.shell.core:4.0.7]
+	at org.apache.felix.gogo.runtime.Closure.executeCmd(Closure.java:480)[43:org.apache.karaf.shell.core:4.0.7]
+	at org.apache.felix.gogo.runtime.Closure.executeStatement(Closure.java:406)[43:org.apache.karaf.shell.core:4.0.7]
+	at org.apache.felix.gogo.runtime.Pipe.run(Pipe.java:108)[43:org.apache.karaf.shell.core:4.0.7]
+	at org.apache.felix.gogo.runtime.Closure.execute(Closure.java:182)[43:org.apache.karaf.shell.core:4.0.7]
+	at org.apache.felix.gogo.runtime.Closure.execute(Closure.java:119)[43:org.apache.karaf.shell.core:4.0.7]
+	at org.apache.felix.gogo.runtime.CommandSessionImpl.execute(CommandSessionImpl.java:94)[43:org.apache.karaf.shell.core:4.0.7]
+	at org.apache.karaf.shell.impl.console.ConsoleSessionImpl.run(ConsoleSessionImpl.java:274)[43:org.apache.karaf.shell.core:4.0.7]
+	at java.lang.Thread.run(Thread.java:745)[:1.8.0_31]
+
+karaf@root()> camel:rest-show camel-1
+Error executing command: Provider org.apache.xalan.processor.TransformerFactoryImpl not found
+
+
+When running the camel-example-servlet-rest-blueprint example
+
+","
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 04/Dec/16 12:47 
+
+It works if you install camel-saxon which provides the saxon xslt transformer. 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 04/Dec/16 12:47                    It works if you install camel-saxon which provides the saxon xslt transformer.              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 04/Dec/16 13:45   - edited 
+
+The JDK provides the transformer as class: com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 04/Dec/16 13:45   - edited                   The JDK provides the transformer as class: com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 04/Dec/16 14:29 
+
+Fixed by CAMEL-10558 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 04/Dec/16 14:29                    Fixed by   CAMEL-10558                
+
+
+
+"
+10556,Bug,Resolved,Minor,Fixed,,2.19.0,"examples,                                            karaf",None,Unknown,Claus Ibsen,Claus Ibsen,0,1,12/4/2016 13:13,12/4/2016 13:36,12/4/2016 13:36,"
+
+This example camel-example-twitter-websocket-blueprint cannot load the static html file when running in karaf
+
+HTTP ERROR: 500
+
+Problem accessing /index.html. Reason:
+
+    java.lang.RuntimeException: java.io.FileNotFoundException: /webapp/index.html (No such file or directory)
+
+
+Its some classloading issues with camel-websocket and camel-jetty when running in OSGi. As the stacktrace seems to load from file system.
+
+2016-12-04 14:11:50,879 | WARN  | SocketServer-266 | ServletHandler                   | 83 - org.eclipse.jetty.util - 9.2.19.v20160908 | /
+java.lang.RuntimeException: java.io.FileNotFoundException: /webapp/index.html (No such file or directory)
+	at org.eclipse.jetty.http.HttpContent$ResourceAsHttpContent.getDirectBuffer(HttpContent.java:110)[71:org.eclipse.jetty.http:9.2.19.v20160908]
+	at org.eclipse.jetty.server.HttpOutput.sendContent(HttpOutput.java:665)[80:org.eclipse.jetty.server:9.2.19.v20160908]
+	at org.eclipse.jetty.servlet.DefaultServlet.sendData(DefaultServlet.java:931)[81:org.eclipse.jetty.servlet:9.2.19.v20160908]
+	at org.eclipse.jetty.servlet.DefaultServlet.doGet(DefaultServlet.java:534)[81:org.eclipse.jetty.servlet:9.2.19.v20160908]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:687)[63:javax.servlet-api:3.1.0]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)[63:javax.servlet-api:3.1.0]
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:812)[81:org.eclipse.jetty.servlet:9.2.19.v20160908]
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:587)[81:org.eclipse.jetty.servlet:9.2.19.v20160908]
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:221)[80:org.eclipse.jetty.server:9.2.19.v20160908]
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1127)[80:org.eclipse.jetty.server:9.2.19.v20160908]
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:515)[81:org.eclipse.jetty.servlet:9.2.19.v20160908]
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:185)[80:org.eclipse.jetty.server:9.2.19.v20160908]
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1061)[80:org.eclipse.jetty.server:9.2.19.v20160908]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141)[80:org.eclipse.jetty.server:9.2.19.v20160908]
+	at org.eclipse.jetty.server.Dispatcher.forward(Dispatcher.java:191)[80:org.eclipse.jetty.server:9.2.19.v20160908]
+	at org.eclipse.jetty.server.Dispatcher.forward(Dispatcher.java:72)[80:org.eclipse.jetty.server:9.2.19.v20160908]
+	at org.eclipse.jetty.servlet.DefaultServlet.doGet(DefaultServlet.java:588)[81:org.eclipse.jetty.servlet:9.2.19.v20160908]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:687)[63:javax.servlet-api:3.1.0]
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)[63:javax.servlet-api:3.1.0]
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:812)[81:org.eclipse.jetty.servlet:9.2.19.v20160908]
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:587)[81:org.eclipse.jetty.servlet:9.2.19.v20160908]
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:221)[80:org.eclipse.jetty.server:9.2.19.v20160908]
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1127)[80:org.eclipse.jetty.server:9.2.19.v20160908]
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:515)[81:org.eclipse.jetty.servlet:9.2.19.v20160908]
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:185)[80:org.eclipse.jetty.server:9.2.19.v20160908]
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1061)[80:org.eclipse.jetty.server:9.2.19.v20160908]
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141)[80:org.eclipse.jetty.server:9.2.19.v20160908]
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:97)[80:org.eclipse.jetty.server:9.2.19.v20160908]
+	at org.eclipse.jetty.server.Server.handle(Server.java:499)[80:org.eclipse.jetty.server:9.2.19.v20160908]
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:311)[80:org.eclipse.jetty.server:9.2.19.v20160908]
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:257)[80:org.eclipse.jetty.server:9.2.19.v20160908]
+	at org.eclipse.jetty.io.AbstractConnection$2.run(AbstractConnection.java:544)[72:org.eclipse.jetty.io:9.2.19.v20160908]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:635)[83:org.eclipse.jetty.util:9.2.19.v20160908]
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:555)[83:org.eclipse.jetty.util:9.2.19.v20160908]
+	at java.lang.Thread.run(Thread.java:745)[:1.8.0_31]
+Caused by: java.io.FileNotFoundException: /webapp/index.html (No such file or directory)
+	at java.io.RandomAccessFile.open(Native Method)[:1.8.0_31]
+	at java.io.RandomAccessFile.<init>(RandomAccessFile.java:243)[:1.8.0_31]
+	at org.eclipse.jetty.util.BufferUtil.readFrom(BufferUtil.java:437)[83:org.eclipse.jetty.util:9.2.19.v20160908]
+	at org.eclipse.jetty.util.BufferUtil.toBuffer(BufferUtil.java:884)[83:org.eclipse.jetty.util:9.2.19.v20160908]
+	at org.eclipse.jetty.http.HttpContent$ResourceAsHttpContent.getDirectBuffer(HttpContent.java:106)[71:org.eclipse.jetty.http:9.2.19.v20160908]
+	... 34 more
+
+
+
+","
+
+    There are no comments yet on this issue.
+ "
+10557,Bug,Resolved,Minor,Fixed,2.17.3,"2.17.5,                                            2.18.2,                                            2.19.0",camel-salesforce,None,Novice,Claus Ibsen,Sune Keller,0,3,12/4/2016 13:54,12/4/2016 14:35,12/4/2016 14:33,"
+
+The documentation says to append ""/request"" to retrieve the request object. The current code does not do that. See https://github.com/apache/camel/pull/1327.
+
+","
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 04/Dec/16 14:33 
+
+Thanks for the PR 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 04/Dec/16 14:33                    Thanks for the PR              
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 04/Dec/16 14:35 
+
+Github user sirlatrom closed the pull request at:
+ https://github.com/apache/camel/pull/1327 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 04/Dec/16 14:35                    Github user sirlatrom closed the pull request at: 
+
+      https://github.com/apache/camel/pull/1327               
+
+
+
+"
+10558,Improvement,Resolved,Major,Fixed,,2.19.0,"camel-core,                                            karaf,                                            osgi",None,Unknown,Claus Ibsen,Claus Ibsen,0,1,12/4/2016 13:59,12/4/2016 14:28,12/4/2016 14:28,"
+
+Related to CAMEL-10555
+If OSGi cannot load xalan transformer etc, then we should fallback to the JDK default. However OSGi makes the regular loader not able to fallback itself, and we need to help it.
+
+","
+
+    There are no comments yet on this issue.
+ "
+10559,New Feature,Resolved,Major,Fixed,,2.19.0,tooling,None,Unknown,Claus Ibsen,Claus Ibsen,0,1,12/5/2016 10:40,12/5/2016 13:17,12/5/2016 13:17,"
+
+See
+https://github.com/fabric8io/fabric8/issues/6617
+
+","
+
+    There are no comments yet on this issue.
+ "
+10560,Task,Resolved,Minor,Fixed,2.18.0,2.19.0,camel-servlet,None,Unknown,Fabrizio Spataro,Fabrizio Spataro,0,2,12/5/2016 16:41,12/6/2016 8:56,12/6/2016 8:55,"
+
+Add new proxy method getSubmittedFileName() into PartDataSource nested class.
+
+","
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 05/Dec/16 16:43 
+
+GitHub user Fabryprog opened a pull request:
+ https://github.com/apache/camel/pull/1331
+ CAMEL-10560, Gets the file name specified by the client
+ https://issues.apache.org/jira/browse/CAMEL-10560
+You can merge this pull request into a Git repository by running:
+    $ git pull https://github.com/Fabryprog/camel CAMEL-10560
+Alternatively you can review and apply these changes as the patch at:
+ https://github.com/apache/camel/pull/1331.patch
+To close this pull request, make a commit to your master/trunk branch
+with (at least) the following in the commit message:
+    This closes #1331
+
+commit e41bdaaf608b6fc4506f600b5a6a6f5c48a24143
+Author: Fabrizio Spataro <fabrizio.spataro@bizmate.it>
+Date:   2016-12-05T16:42:38Z
+ CAMEL-10560, added getSubmittedFileName() into PartDataSource to retrieve file name specified by the client
+ 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 05/Dec/16 16:43                    GitHub user Fabryprog opened a pull request: 
+
+      https://github.com/apache/camel/pull/1331  
+
+       CAMEL-10560  , Gets the file name specified by the client 
+
+      https://issues.apache.org/jira/browse/CAMEL-10560  
+
+ You can merge this pull request into a Git repository by running: 
+
+     $ git pull  https://github.com/Fabryprog/camel    CAMEL-10560   
+
+ Alternatively you can review and apply these changes as the patch at: 
+
+      https://github.com/apache/camel/pull/1331.patch  
+
+ To close this pull request, make a commit to your master/trunk branch 
+with (at least) the following in the commit message: 
+
+     This closes #1331 
+
+ 
+ commit e41bdaaf608b6fc4506f600b5a6a6f5c48a24143 
+Author: Fabrizio Spataro <fabrizio.spataro@bizmate.it> 
+Date:   2016-12-05T16:42:38Z 
+
+       CAMEL-10560  , added getSubmittedFileName() into PartDataSource to retrieve file name specified by the client 
+
+              
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 06/Dec/16 08:56 
+
+Github user Fabryprog closed the pull request at:
+ https://github.com/apache/camel/pull/1331 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 06/Dec/16 08:56                    Github user Fabryprog closed the pull request at: 
+
+      https://github.com/apache/camel/pull/1331               
+
+
+
+"
+10561,New Feature,Resolved,Major,Fixed,,2.19.0,camel-catalog,None,Unknown,Claus Ibsen,Claus Ibsen,0,1,12/6/2016 9:30,12/6/2016 13:01,12/6/2016 13:01,"
+
+To make it easy for users to expose the CamelCatalog as a REST service from a JAX-RS resource class.
+
+","
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 06/Dec/16 13:01 
+
+There is a little camel-rest-app users can try out the rest api which has embedded swagger ui as well. 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 06/Dec/16 13:01                    There is a little camel-rest-app users can try out the rest api which has embedded swagger ui as well.              
+
+
+
+"
+10562,Bug,Resolved,Critical,Fixed,"2.18.0,                                            2.18.1","2.18.2,                                            2.19.0",camel-core,None,Unknown,Claus Ibsen,Stefan,0,3,12/6/2016 16:18,12/8/2016 8:43,12/8/2016 8:43,"
+
+DefaultCamelContext#safelyStartRouteServices the following code is called:
+
+Collections.sort(startupListeners, new OrderedComparator());
+
+
+startupListeners is a CopyOnWriteArrayList.
+In the specification of Collections.sort it is stated, that an UnsupportedOperationException is thrown if the collections listiterator doesn't support the set-operation.
+Sadly, the documentation of CopyOnWriteArrayList#listIterator states, that the listiterator doesn't support this operation.
+As expected in this szenario, the UnsupportedOperationException is thrown during startup of the camel context if an Oracle JDK 1.8.0 with patchlevel lower than 20 is used.
+In 1.8.0_20 the operation Collections#sort(List,Comparator) is rewritten to delegate to List#sort(Comparator) so it doesn't matter anymore if the lists listIterator supports the set-operation.
+The issue can trivially been fixed by replacing the line by
+
+startupListeners.sort(new OrderedComparator());
+
+
+
+","
+
+
+
+
+
+ Stefan
+ added a comment  - 06/Dec/16 16:24 
+
+This issue is a blocker in our environment, because we can not simply change the JRE in use on our servers. So I set the priority only to critical because of the outdated affected version of Java and the because I'm not sure, if other JREs, i.e. the IBM JRE, are affected, too.
+I will add a pull request later. Currently I'm not able to clone the git repo  
+
+
+
+
+
+
+
+ Stefan
+ added a comment  - 06/Dec/16 16:24                    This issue is a blocker in our environment, because we can not simply change the JRE in use on our servers. So I set the priority only to critical because of the outdated affected version of Java and the because I'm not sure, if other JREs, i.e. the IBM JRE, are affected, too. 
+
+ I will add a pull request later. Currently I'm not able to clone the git repo                
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 06/Dec/16 23:12 
+
+GitHub user sschulze opened a pull request:
+ https://github.com/apache/camel/pull/1333
+ CAMEL-10562: camel-core - Switched to List#sort
+    Usage of Collections.sort(CopyOnWriteArrayList, Comparator) causes an UnsupportedOperationException on Oracle Java 1.8.0 up to fixpack 20 due to the documented restriction of this method to require an implemented ListIterator#set(...) operation on the given list.
+    For details have a look at CAMEL-10562(https://issues.apache.org/jira/browse/CAMEL-10562).
+You can merge this pull request into a Git repository by running:
+    $ git pull https://github.com/sschulze/camel master
+Alternatively you can review and apply these changes as the patch at:
+ https://github.com/apache/camel/pull/1333.patch
+To close this pull request, make a commit to your master/trunk branch
+with (at least) the following in the commit message:
+    This closes #1333
+
+commit bb8be00f5e50f4190677ffac8e73609446a600d9
+Author: Stefan Schulze <stefan.schulze3@gmail.com>
+Date:   2016-12-06T23:02:19Z
+ CAMEL-10562: camel-core - Switched to List#sort
+ 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 06/Dec/16 23:12                    GitHub user sschulze opened a pull request: 
+
+      https://github.com/apache/camel/pull/1333  
+
+       CAMEL-10562  : camel-core - Switched to List#sort 
+
+     Usage of Collections.sort(CopyOnWriteArrayList, Comparator) causes an UnsupportedOperationException on Oracle Java 1.8.0 up to fixpack 20 due to the documented restriction of this method to require an implemented ListIterator#set(...) operation on the given list. 
+
+     For details have a look at   CAMEL-10562  ( https://issues.apache.org/jira/browse/CAMEL-10562 ). 
+
+ You can merge this pull request into a Git repository by running: 
+
+     $ git pull  https://github.com/sschulze/camel  master 
+
+ Alternatively you can review and apply these changes as the patch at: 
+
+      https://github.com/apache/camel/pull/1333.patch  
+
+ To close this pull request, make a commit to your master/trunk branch 
+with (at least) the following in the commit message: 
+
+     This closes #1333 
+
+ 
+ commit bb8be00f5e50f4190677ffac8e73609446a600d9 
+Author: Stefan Schulze <stefan.schulze3@gmail.com> 
+Date:   2016-12-06T23:02:19Z 
+
+       CAMEL-10562  : camel-core - Switched to List#sort 
+
+              
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 08/Dec/16 08:43 
+
+Github user asfgit closed the pull request at:
+ https://github.com/apache/camel/pull/1333 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 08/Dec/16 08:43                    Github user asfgit closed the pull request at: 
+
+      https://github.com/apache/camel/pull/1333               
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 08/Dec/16 08:43 
+
+Thanks for reporting and the PR 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 08/Dec/16 08:43                    Thanks for reporting and the PR              
+
+
+
+"
+10563,Improvement,Resolved,Minor,Fixed,,2.19.0,camel-hazelcast,None,Unknown,Luca Burgazzoli,Luca Burgazzoli,0,1,12/6/2016 16:23,12/13/2016 13:20,12/13/2016 13:20,,"
+
+
+
+
+
+ Luca Burgazzoli
+ added a comment  - 13/Dec/16 11:20 
+
+Need to add better handling for hz instance cleanup 
+
+
+
+
+
+
+
+ Luca Burgazzoli
+ added a comment  - 13/Dec/16 11:20                    Need to add better handling for hz instance cleanup              
+
+
+
+"
+10564,Bug,Resolved,Major,Fixed,,2.19.0,camel-netty-http,None,Unknown,Nicola Ferraro,Nicola Ferraro,0,1,12/7/2016 14:57,12/13/2016 9:17,12/13/2016 9:17,"
+
+Setting properties like:
+
+camel.component.netty-http.configuration.maximum-pool-size=20
+
+
+... to configure the netty-http-starter component produce class-cast errors.
+
+Caused by: java.lang.ClassCastException: org.apache.camel.component.netty.NettyConfiguration cannot be cast to org.apache.camel.component.netty.http.NettyHttpConfiguration
+	at org.apache.camel.component.netty.http.NettyHttpEndpoint.getConfiguration(NettyHttpEndpoint.java:151) ~[camel-netty-http-2.18.1.jar:2.18.1]
+	at org.apache.camel.component.netty.http.NettyHttpEndpoint.createConsumer(NettyHttpEndpoint.java:83) ~[camel-netty-http-2.18.1.jar:2.18.1]
+	at org.apache.camel.component.netty.http.NettyHttpComponent.doCreateConsumer(NettyHttpComponent.java:369) ~[camel-netty-http-2.18.1.jar:2.18.1]
+	at org.apache.camel.component.netty.http.NettyHttpComponent.createConsumer(NettyHttpComponent.java:264) ~[camel-netty-http-2.18.1.jar:2.18.1]
+	at org.apache.camel.component.rest.RestEndpoint.createConsumer(RestEndpoint.java:489) ~[camel-core-2.18.1.jar:2.18.1]
+	at org.apache.camel.impl.EventDrivenConsumerRoute.addServices(EventDrivenConsumerRoute.java:69) ~[camel-core-2.18.1.jar:2.18.1]
+	at org.apache.camel.impl.DefaultRoute.onStartingServices(DefaultRoute.java:103) ~[camel-core-2.18.1.jar:2.18.1]
+	at org.apache.camel.impl.RouteService.doWarmUp(RouteService.java:167) ~[camel-core-2.18.1.jar:2.18.1]
+	at org.apache.camel.impl.RouteService.warmUp(RouteService.java:141) ~[camel-core-2.18.1.jar:2.18.1]
+	... 31 common frames omitted
+
+
+
+The reason is that the netty-http Component, that inherits from the netty component, requires a subclass of NettyConfiguration (NettyHttpConfiguration), while the generated starter is using the parent class.
+
+","
+
+    There are no comments yet on this issue.
+ "
+10565,Improvement,Resolved,Major,Done,,2.19.0,camel-undertow,None,Unknown,Nicola Ferraro,Nicola Ferraro,0,1,12/7/2016 15:07,3/24/2017 12:15,3/24/2017 12:15,"
+
+The undertow component creates 1 worker thread per CPU and this can be a problem when running in docker containers on machines with 64+ cores (Java containers currently see the number of CPUs of the host machine, even when resource limitation is enabled).
+We need to add configuration options to the component to limit the number of threads (and possibly other available options).
+
+","
+
+    There are no comments yet on this issue.
+ "
+10566,Task,Resolved,Major,Fixed,,2.19.0,karaf,None,Unknown,Claus Ibsen,Claus Ibsen,0,1,12/7/2016 15:16,12/7/2016 15:21,12/7/2016 15:21,"
+
+Its not supported on osgi/karaf.
+
+","
+
+    There are no comments yet on this issue.
+ "
+10567,Improvement,Resolved,Minor,Fixed,,"2.16.5,                                            2.17.5,                                            2.18.2,                                            2.19.0",camel-jackson,None,Unknown,Andrea Cosentino,Andrea Cosentino,0,1,12/7/2016 16:54,12/14/2016 20:26,12/7/2016 17:22,"
+
+By default the option will be false.
+
+","
+
+    There are no comments yet on this issue.
+ "
+10568,Bug,Resolved,Major,Fixed,2.18.0,"2.17.5,                                            2.18.2,                                            2.19.0",camel-sftp,None,Novice,Claus Ibsen,Adam Campbell,0,3,12/7/2016 22:29,12/8/2016 14:17,12/8/2016 14:15,"
+
+It looks like CAMEL-9820 has not resolved SFTP readLockMinAge functionality.
+When I run the latest version, I get a new last modified time as negative. I think this is because both types are int so it is performing the calculation as an int and then converting it to long.
+It should work if this line:
+newLastModified = f.getAttrs().getMTime() * 1000;
+Is changed to:
+newLastModified = f.getAttrs().getMTime() * 1000L;
+TRACE o.a.c.c.f.r.s.SftpChangedExclusiveReadLockStrategy - List files outgoing/Promo/dev/test.dat found 1 files
+TRACE o.a.c.c.f.r.s.SftpChangedExclusiveReadLockStrategy - Previous last modified: -9223372036854775808, new last modified: -616826120
+TRACE o.a.c.c.f.r.s.SftpChangedExclusiveReadLockStrategy - Previous length: -9223372036854775808, new length: 12921172
+TRACE o.a.c.c.f.r.s.SftpChangedExclusiveReadLockStrategy - New older than threshold: 1481147995902
+TRACE o.a.c.c.f.r.s.SftpChangedExclusiveReadLockStrategy - Read lock acquired.
+
+","
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 08/Dec/16 08:05 
+
+Thanks for reporting. I wonder if you can do a patch or better as a github PR
+http://camel.apache.org/contributing 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 08/Dec/16 08:05                    Thanks for reporting. I wonder if you can do a patch or better as a github PR 
+ http://camel.apache.org/contributing               
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 08/Dec/16 13:58 
+
+GitHub user adamcamp opened a pull request:
+ https://github.com/apache/camel/pull/1337
+ CAMEL-10568 Fix SftpChangedExclusiveReadLockStrategy integer overflow bug
+ https://issues.apache.org/jira/browse/CAMEL-10568
+You can merge this pull request into a Git repository by running:
+    $ git pull https://github.com/adamcamp/camel CAMEL-10568
+Alternatively you can review and apply these changes as the patch at:
+ https://github.com/apache/camel/pull/1337.patch
+To close this pull request, make a commit to your master/trunk branch
+with (at least) the following in the commit message:
+    This closes #1337
+
+commit df2f7cd2bb2e5816b59e854eb9e1a75b660f5e79
+Author: acampbel <adam.campbell@neustar.biz>
+Date:   2016-12-08T13:55:28Z
+ CAMEL-10568 Fix integer overflow bug
+ 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 08/Dec/16 13:58                    GitHub user adamcamp opened a pull request: 
+
+      https://github.com/apache/camel/pull/1337  
+
+       CAMEL-10568   Fix SftpChangedExclusiveReadLockStrategy integer overflow bug 
+
+      https://issues.apache.org/jira/browse/CAMEL-10568  
+
+ You can merge this pull request into a Git repository by running: 
+
+     $ git pull  https://github.com/adamcamp/camel    CAMEL-10568   
+
+ Alternatively you can review and apply these changes as the patch at: 
+
+      https://github.com/apache/camel/pull/1337.patch  
+
+ To close this pull request, make a commit to your master/trunk branch 
+with (at least) the following in the commit message: 
+
+     This closes #1337 
+
+ 
+ commit df2f7cd2bb2e5816b59e854eb9e1a75b660f5e79 
+Author: acampbel <adam.campbell@neustar.biz> 
+Date:   2016-12-08T13:55:28Z 
+
+       CAMEL-10568   Fix integer overflow bug 
+
+              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 08/Dec/16 14:15 
+
+Thanks for the PR 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 08/Dec/16 14:15                    Thanks for the PR              
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 08/Dec/16 14:17 
+
+Github user adamcamp closed the pull request at:
+ https://github.com/apache/camel/pull/1337 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 08/Dec/16 14:17                    Github user adamcamp closed the pull request at: 
+
+      https://github.com/apache/camel/pull/1337               
+
+
+
+"
+10569,Improvement,Resolved,Minor,Duplicate,2.19.0,,camel-salesforce,None,Unknown,Zoran Regvart,Zoran Regvart,0,1,12/8/2016 10:37,12/14/2016 9:30,12/14/2016 9:30,"
+
+As per discussion in CAMEL-10452, Data Transfer Objects (DTOs) generated by camel-salesforce-maven-plugin could contain additional metadata. This metadata could be used to get the list of fields in the SObject, to provide label plural form (needed in some APIs), or URLs of SObjects.
+The simplest option would be to add a method that returns existing SObjectDescription populated with the data received from the metadata service during the generation of DTOs.
+
+","
+
+    There are no comments yet on this issue.
+ "
+10570,Improvement,Resolved,Minor,Fixed,2.19.0,2.19.0,camel-salesforce,None,Unknown,Zoran Regvart,Zoran Regvart,0,2,12/8/2016 10:37,12/14/2016 9:31,12/14/2016 9:31,"
+
+As per discussion in CAMEL-10452, Data Transfer Objects (DTOs) generated by camel-salesforce-maven-plugin could contain additional metadata. This metadata could be used to get the list of fields in the SObject, to provide label plural form (needed in some APIs), or URLs of SObjects.
+The simplest option would be to add a method that returns existing SObjectDescription populated with the data received from the metadata service during the generation of DTOs.
+
+","
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 08/Dec/16 10:38 
+
+GitHub user zregvart opened a pull request:
+ https://github.com/apache/camel/pull/1334
+ CAMEL-10570  camel-salesforce: add metadata to generated DTOs
+    This commit adds SObjectDescription by making the DTOs extend
+    AbstractDescribedSObjectBase (new class) instead of AbstractSObjectBase.
+    The code generation is performed in Velocity template by recursing the
+    bean SObjectDescription properties. Helper methods are added to
+    GeneratorUtility that help track the stack of the recursive invocation.
+    To prevent hitting Java method length restriction (64K) some properties
+    are blacklisted: PicklistValues and ChildRelationships which most likely
+    would not be needed in the component operation anyways.
+    @dhirajsb would you mind taking a look at this?
+You can merge this pull request into a Git repository by running:
+    $ git pull https://github.com/zregvart/camel salesforce-metadata
+Alternatively you can review and apply these changes as the patch at:
+ https://github.com/apache/camel/pull/1334.patch
+To close this pull request, make a commit to your master/trunk branch
+with (at least) the following in the commit message:
+    This closes #1334
+
+commit a7cdf08cf52ef4f5cc6f418e6357142b5a441b9a
+Author: Zoran Regvart <zoran@regvart.com>
+Date:   2016-12-08T10:27:28Z
+    SObjectDescription metadata in DTOs
+    This commit adds SObjectDescription by making the DTOs extend
+    AbstractDescribedSObjectBase (new class) instead of AbstractSObjectBase.
+    The code generation is performed in Velocity template by recursing the
+    bean SObjectDescription properties. Helper methods are added to
+    GeneratorUtility that help track the stack of the recursive invocation.
+    To prevent hitting Java method length restriction (64K) some properties
+    are blacklisted: PicklistValues and ChildRelationships which most likely
+    would not be needed in the component operation anyways.
+    (cherry picked from commit 2d14fd8caa58f4520cf70801a27a0a57b023f492)
+ 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 08/Dec/16 10:38                    GitHub user zregvart opened a pull request: 
+
+      https://github.com/apache/camel/pull/1334  
+
+       CAMEL-10570    camel-salesforce: add metadata to generated DTOs 
+
+     This commit adds SObjectDescription by making the DTOs extend 
+    AbstractDescribedSObjectBase (new class) instead of AbstractSObjectBase. 
+
+     The code generation is performed in Velocity template by recursing the 
+    bean SObjectDescription properties. Helper methods are added to 
+    GeneratorUtility that help track the stack of the recursive invocation. 
+
+     To prevent hitting Java method length restriction (64K) some properties 
+    are blacklisted: PicklistValues and ChildRelationships which most likely 
+    would not be needed in the component operation anyways. 
+
+     @dhirajsb would you mind taking a look at this? 
+
+ You can merge this pull request into a Git repository by running: 
+
+     $ git pull  https://github.com/zregvart/camel  salesforce-metadata 
+
+ Alternatively you can review and apply these changes as the patch at: 
+
+      https://github.com/apache/camel/pull/1334.patch  
+
+ To close this pull request, make a commit to your master/trunk branch 
+with (at least) the following in the commit message: 
+
+     This closes #1334 
+
+ 
+ commit a7cdf08cf52ef4f5cc6f418e6357142b5a441b9a 
+Author: Zoran Regvart <zoran@regvart.com> 
+Date:   2016-12-08T10:27:28Z 
+
+     SObjectDescription metadata in DTOs 
+
+     This commit adds SObjectDescription by making the DTOs extend 
+    AbstractDescribedSObjectBase (new class) instead of AbstractSObjectBase. 
+
+     The code generation is performed in Velocity template by recursing the 
+    bean SObjectDescription properties. Helper methods are added to 
+    GeneratorUtility that help track the stack of the recursive invocation. 
+
+     To prevent hitting Java method length restriction (64K) some properties 
+    are blacklisted: PicklistValues and ChildRelationships which most likely 
+    would not be needed in the component operation anyways. 
+
+     (cherry picked from commit 2d14fd8caa58f4520cf70801a27a0a57b023f492) 
+
+              
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 14/Dec/16 09:17 
+
+Github user zregvart closed the pull request at:
+ https://github.com/apache/camel/pull/1334 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 14/Dec/16 09:17                    Github user zregvart closed the pull request at: 
+
+      https://github.com/apache/camel/pull/1334               
+
+
+
+"
+10571,Improvement,Resolved,Minor,Fixed,2.19.0,2.19.0,camel-salesforce,None,Unknown,Zoran Regvart,Zoran Regvart,0,2,12/8/2016 10:46,12/14/2016 15:32,12/14/2016 15:32,"
+
+The SObject tree Composite API allows for creation of up to 200 records with 5 levels of parent-child relationships in one API request. This improves performance by eliminating multiple round-trip requests needed to perform record creation.
+The camel-salesforce component should support this aspect of Composite API.
+
+","
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 08/Dec/16 18:56 
+
+GitHub user zregvart opened a pull request:
+ https://github.com/apache/camel/pull/1338
+ CAMEL-10571 SObject tree creation, Composite API
+    *Don't merge look at #1334 first.*
+    @dhirajsb would you mind taking a look at this?
+    This pull requests adds support for SObject tree creation using Salesforce
+    Composite API. It includes the commit from #1334 which it is based on.
+    So please review pull request #1334 before merging this in, and if you can
+    notify me through comments I'll rebase if #1334 gets merged in.
+    This functionality allows user to create multiple, up to 200, records
+    including parent-child relationships, up to 5 levels using one API call.
+    For instance:
+    Account account = ...
+    Contact president = ...
+    Contact marketing = ...
+    Account anotherAccount = ...
+    Contact sales = ...
+    Asset someAsset = ...
+    // build the tree
+    SObjectTree request = new SObjectTree();
+    request.addObject(account).addChildren(president, marketing);
+    request.addObject(anotherAccount).addChild(sales).addChild(someAsset);
+    final SObjectTree response =
+    template.requestBody(""salesforce:composite-tree"", tree,
+    SObjectTree.class);
+    The returned response in the output message is the identical object
+    received in the body of the input message updated with identifiers
+    received on successful record creation or populated errors on failure.
+You can merge this pull request into a Git repository by running:
+    $ git pull https://github.com/zregvart/camel composite-api
+Alternatively you can review and apply these changes as the patch at:
+ https://github.com/apache/camel/pull/1338.patch
+To close this pull request, make a commit to your master/trunk branch
+with (at least) the following in the commit message:
+    This closes #1338
+
+commit a7cdf08cf52ef4f5cc6f418e6357142b5a441b9a
+Author: Zoran Regvart <zoran@regvart.com>
+Date:   2016-12-08T10:27:28Z
+    SObjectDescription metadata in DTOs
+    This commit adds SObjectDescription by making the DTOs extend
+    AbstractDescribedSObjectBase (new class) instead of AbstractSObjectBase.
+    The code generation is performed in Velocity template by recursing the
+    bean SObjectDescription properties. Helper methods are added to
+    GeneratorUtility that help track the stack of the recursive invocation.
+    To prevent hitting Java method length restriction (64K) some properties
+    are blacklisted: PicklistValues and ChildRelationships which most likely
+    would not be needed in the component operation anyways.
+    (cherry picked from commit 2d14fd8caa58f4520cf70801a27a0a57b023f492)
+commit cfbb26c00858dd472b7f320174fdd0fd431c7f5d
+Author: Zoran Regvart <zoran@regvart.com>
+Date:   2016-12-08T10:28:07Z
+ CAMEL-10571 SObject tree creation, Composite API
+    This commit implements support for SObject tree creation via Salesforce
+    Composite API. This allows user to create multiple, up to 200, records
+    including parent-child relationships, up to 5 levels using one API call.
+    For instance:
+    Account account = ...
+    Contact president = ...
+    Contact marketing = ...
+    Account anotherAccount = ...
+    Contact sales = ...
+    Asset someAsset = ...
+    // build the tree
+    SObjectTree request = new SObjectTree();
+    request.addObject(account).addChildren(president, marketing);
+    request.addObject(anotherAccount).addChild(sales).addChild(someAsset);
+    final SObjectTree response =
+    template.requestBody(""salesforce:composite-tree"", tree,
+    SObjectTree.class);
+    The returned response in the output message is the identical object
+    received in the body of the input message updated with identifiers
+    received on successful record creation or populated errors on failure.
+ 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 08/Dec/16 18:56                    GitHub user zregvart opened a pull request: 
+
+      https://github.com/apache/camel/pull/1338  
+
+        CAMEL-10571   SObject tree creation, Composite API 
+
+     * Don't merge look at #1334 first. * 
+
+     @dhirajsb would you mind taking a look at this? 
+
+     This pull requests adds support for SObject tree creation using Salesforce 
+    Composite API. It includes the commit from #1334 which it is based on. 
+
+     So please review pull request #1334 before merging this in, and if you can 
+    notify me through comments I'll rebase if #1334 gets merged in. 
+
+     This functionality allows user to create multiple, up to 200, records 
+    including parent-child relationships, up to 5 levels using one API call. 
+
+     For instance: 
+
+     Account account = ... 
+    Contact president = ... 
+    Contact marketing = ... 
+
+     Account anotherAccount = ... 
+    Contact sales = ... 
+    Asset someAsset = ... 
+
+     // build the tree 
+    SObjectTree request = new SObjectTree(); 
+    request.addObject(account).addChildren(president, marketing); 
+    request.addObject(anotherAccount).addChild(sales).addChild(someAsset); 
+
+     final SObjectTree response = 
+    template.requestBody(""salesforce:composite-tree"", tree, 
+    SObjectTree.class); 
+
+     The returned response in the output message is the identical object 
+    received in the body of the input message updated with identifiers 
+    received on successful record creation or populated errors on failure. 
+
+ You can merge this pull request into a Git repository by running: 
+
+     $ git pull  https://github.com/zregvart/camel  composite-api 
+
+ Alternatively you can review and apply these changes as the patch at: 
+
+      https://github.com/apache/camel/pull/1338.patch  
+
+ To close this pull request, make a commit to your master/trunk branch 
+with (at least) the following in the commit message: 
+
+     This closes #1338 
+
+ 
+ commit a7cdf08cf52ef4f5cc6f418e6357142b5a441b9a 
+Author: Zoran Regvart <zoran@regvart.com> 
+Date:   2016-12-08T10:27:28Z 
+
+     SObjectDescription metadata in DTOs 
+
+     This commit adds SObjectDescription by making the DTOs extend 
+    AbstractDescribedSObjectBase (new class) instead of AbstractSObjectBase. 
+
+     The code generation is performed in Velocity template by recursing the 
+    bean SObjectDescription properties. Helper methods are added to 
+    GeneratorUtility that help track the stack of the recursive invocation. 
+
+     To prevent hitting Java method length restriction (64K) some properties 
+    are blacklisted: PicklistValues and ChildRelationships which most likely 
+    would not be needed in the component operation anyways. 
+
+     (cherry picked from commit 2d14fd8caa58f4520cf70801a27a0a57b023f492) 
+
+ commit cfbb26c00858dd472b7f320174fdd0fd431c7f5d 
+Author: Zoran Regvart <zoran@regvart.com> 
+Date:   2016-12-08T10:28:07Z 
+
+       CAMEL-10571   SObject tree creation, Composite API 
+
+     This commit implements support for SObject tree creation via Salesforce 
+    Composite API. This allows user to create multiple, up to 200, records 
+    including parent-child relationships, up to 5 levels using one API call. 
+
+     For instance: 
+
+     Account account = ... 
+    Contact president = ... 
+    Contact marketing = ... 
+
+     Account anotherAccount = ... 
+    Contact sales = ... 
+    Asset someAsset = ... 
+
+     // build the tree 
+    SObjectTree request = new SObjectTree(); 
+    request.addObject(account).addChildren(president, marketing); 
+    request.addObject(anotherAccount).addChild(sales).addChild(someAsset); 
+
+     final SObjectTree response = 
+    template.requestBody(""salesforce:composite-tree"", tree, 
+    SObjectTree.class); 
+
+     The returned response in the output message is the identical object 
+    received in the body of the input message updated with identifiers 
+    received on successful record creation or populated errors on failure. 
+
+              
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 14/Dec/16 11:45 
+
+Github user zregvart closed the pull request at:
+ https://github.com/apache/camel/pull/1338 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 14/Dec/16 11:45                    Github user zregvart closed the pull request at: 
+
+      https://github.com/apache/camel/pull/1338               
+
+
+
+"
+10572,Improvement,Resolved,Minor,Fixed,2.18.1,2.19.0,camel-core,None,Novice,Claus Ibsen,Christoph Läubrich,0,2,12/8/2016 11:47,1/5/2017 9:25,1/5/2017 9:25,"
+
+The documentation for the CBR (http://camel.apache.org/content-based-router.html) states 
+The following example shows how to route ... depending on the evaluation of various Predicate expressions
+If you now look at the predicate section (http://camel.apache.org/predicate.html) it says:
+Camel supports extensible Predicates using multiple Languages; the following languages are supported out of the box
+...
+Ref Language
+...But going to the Ref page (http://camel.apache.org/ref-language.html) it statesThe Ref Expression Language is really just a way to lookup a custom Expression from the Registry. 
+So Ref Language does NOT support Predicates, it works in most cases since nearly all classes in Camel core implement Expresion and Predicate interface and there is a lot of converting between those, but if you have a custom expression that only implements predicate, you get in fact an (a bit misleading) exception:
+java.lang.IllegalArgumentException: Cannot find expression in registry with ref: predicate
+	at org.apache.camel.language.ref.RefLanguage$1.evaluate(RefLanguage.java:50)
+	at org.apache.camel.support.ExpressionAdapter.evaluate(ExpressionAdapter.java:36)
+	at org.apache.camel.support.ExpressionSupport.matches(ExpressionSupport.java:32)
+	at org.apache.camel.util.ExpressionToPredicateAdapter.matches(ExpressionToPredicateAdapter.java:35)
+	at org.apache.camel.processor.FilterProcessor.matches(FilterProcessor.java:65)
+	at org.apache.camel.processor.ChoiceProcessor.process(ChoiceProcessor.java:93)
+	at org.apache.camel.management.InstrumentationProcessor.process(InstrumentationProcessor.java:77)
+	at org.apache.camel.processor.RedeliveryErrorHandler.process(RedeliveryErrorHandler.java:542)
+	at org.apache.camel.processor.CamelInternalProcessor.process(CamelInternalProcessor.java:197)
+	at org.apache.camel.processor.CamelInternalProcessor.process(CamelInternalProcessor.java:197)
+	at org.apache.camel.component.timer.TimerConsumer.sendTimerExchange(TimerConsumer.java:192)
+	at org.apache.camel.component.timer.TimerConsumer$1.run(TimerConsumer.java:76)
+It takes me some time to find out that Camel is in fact finding my bean but can't use it, beside that its hard to work out why a predicate must also implement expression (Choice it self requires an Predicate in fact, so it converts all expresions to Predicates).
+So the following improvements would be nice
+
+Let RefLanguage send out some kind of TypeConverterException if it can't use the bean as the desired type
+Let Ref, if it finds that the referenced bean is a predicate, convert this to an expression e.g with PredicateToExpressionAdapter
+
+
+","
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 08/Dec/16 20:08 
+
+You are welcome to work on a patch or better githb PR with an implementation of this
+http://camel.apache.org/contributing
+Include an unit test would be good 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 08/Dec/16 20:08                    You are welcome to work on a patch or better githb PR with an implementation of this 
+ http://camel.apache.org/contributing  
+
+ Include an unit test would be good              
+
+
+
+"
+10573,Bug,Resolved,Major,Fixed,,"2.18.2,                                            2.19.0","karaf,                                            osgi",None,Unknown,John Poth,John Poth,0,5,12/8/2016 12:14,2/13/2017 17:53,12/13/2016 9:42,"
+
+In a OSGI environment only, FallBackTypeConverters are required to be annotated with @Converter whereas otherwise they are not.
+This causes camel-jackson's FallbackTypeConverter to not be loaded and a 'NoTypeConversionAvailableException' will be thrown. 
+I will provide a PR.
+
+","
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 08/Dec/16 12:24 
+
+GitHub user johnpoth opened a pull request:
+ https://github.com/apache/camel/pull/1336
+ CAMEL-10573: Align FallbackTypeConverter loading in OSGI environments
+ https://issues.apache.org/jira/browse/CAMEL-10573
+You can merge this pull request into a Git repository by running:
+    $ git pull https://github.com/johnpoth/camel CAMEL-10573
+Alternatively you can review and apply these changes as the patch at:
+ https://github.com/apache/camel/pull/1336.patch
+To close this pull request, make a commit to your master/trunk branch
+with (at least) the following in the commit message:
+    This closes #1336
+
+commit 3cac6640f6c2d12c9939dcd5c624e0a91bd263c5
+Author: jpoth <poth.john@gmail.com>
+Date:   2016-12-08T12:23:20Z
+ CAMEL-10573: Align FallbackTypeConverter loading in OSGI environments
+ 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 08/Dec/16 12:24                    GitHub user johnpoth opened a pull request: 
+
+      https://github.com/apache/camel/pull/1336  
+
+       CAMEL-10573  : Align FallbackTypeConverter loading in OSGI environments 
+
+      https://issues.apache.org/jira/browse/CAMEL-10573  
+
+ You can merge this pull request into a Git repository by running: 
+
+     $ git pull  https://github.com/johnpoth/camel    CAMEL-10573   
+
+ Alternatively you can review and apply these changes as the patch at: 
+
+      https://github.com/apache/camel/pull/1336.patch  
+
+ To close this pull request, make a commit to your master/trunk branch 
+with (at least) the following in the commit message: 
+
+     This closes #1336 
+
+ 
+ commit 3cac6640f6c2d12c9939dcd5c624e0a91bd263c5 
+Author: jpoth <poth.john@gmail.com> 
+Date:   2016-12-08T12:23:20Z 
+
+       CAMEL-10573  : Align FallbackTypeConverter loading in OSGI environments 
+
+              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 08/Dec/16 13:12 
+
+Can you point out better why you think this PR is valid. Why should the test not be called? And you only did this code change in the first place not further below where the converter is loaded using package name.
+And can you provide an unit test / sample project that reproduces this problem 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 08/Dec/16 13:12                    Can you point out better why you think this PR is valid. Why should the test not be called? And you only did this code change in the first place not further below where the converter is loaded using package name. 
+
+ And can you provide an unit test / sample project that reproduces this problem              
+
+
+
+
+
+
+
+
+ John Poth
+ added a comment  - 12/Dec/16 18:49 
+
+Hi davsclaus,
+Thanks for looking into this!
+So this PR aligns the way FallbackTypeConverters are loaded in Camel-OSGI and in plain Camel. As you can see there is no annotation check in the latter.
+I didn't remove the other annotation check you mentioned because it is in line with what plain Camel does.
+The motivation behind this alignment is that, in Camel/OSGI, Camel-jackson's FallbackTypeConverter is not loaded. This is best illustrated by the added test in my PR. As there was no TypeConverter testing, I created my own (may be a good base to test other TypeConverters?).
+I'd be happy to propose other solutions if alignment doesn't seem like a good idea 
+Thanks!
+John. 
+
+
+
+
+
+
+
+ John Poth
+ added a comment  - 12/Dec/16 18:49                    Hi  davsclaus , 
+
+ Thanks for looking into this! 
+
+ So this PR aligns the way FallbackTypeConverters are loaded in  Camel-OSGI  and in  plain  Camel. As you can see there is no annotation check in the latter. 
+
+ I didn't remove the other annotation check you mentioned because it is in line with what plain Camel  does . 
+
+ The motivation behind this alignment is that, in Camel/OSGI, Camel-jackson's  FallbackTypeConverter  is not loaded. This is best illustrated by the added  test  in my PR. As there was no TypeConverter testing, I created my own (may be a good base to test other TypeConverters?). 
+
+ I'd be happy to propose other solutions if alignment doesn't seem like a good idea   
+
+ Thanks! 
+
+ John.              
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 13/Dec/16 09:41 
+
+Github user asfgit closed the pull request at:
+ https://github.com/apache/camel/pull/1336 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 13/Dec/16 09:41                    Github user asfgit closed the pull request at: 
+
+      https://github.com/apache/camel/pull/1336               
+
+
+
+
+
+
+
+
+ Christian Schneider
+ added a comment  - 13/Feb/17 17:52 
+
+I think the commit 05ba679d3906528cb is causing a severe issue with the activemq-camel component (AMQ-6597). The BundleComponentResolver seems to detect the activemq component inside the activemq-osgi bundle. This causes the activemq component to not work at all.
+The issue seems to be caused by removing the test for a matching class:
+                            if (test.matches(clazz)) 
+{
+                                classes.add(clazz);
+                            }
+
+After all though loading the foreign class is the problem in the first place. As activemq OSGi has DynamicImport-Package * it will be able to load all classes in the OSGi system and will create a wiring to the classes package. 
+I will create a separate issue to track and solve this problem. 
+
+
+
+
+
+
+
+ Christian Schneider
+ added a comment  - 13/Feb/17 17:52                    I think the commit 05ba679d3906528cb is causing a severe issue with the activemq-camel component (  AMQ-6597  ). The BundleComponentResolver seems to detect the activemq component inside the activemq-osgi bundle. This causes the activemq component to not work at all. 
+
+ The issue seems to be caused by removing the test for a matching class: 
+                            if (test.matches(clazz))  
+{
+                                classes.add(clazz);
+                            }
+
+ After all though loading the foreign class is the problem in the first place. As activemq OSGi has DynamicImport-Package * it will be able to load all classes in the OSGi system and will create a wiring to the classes package.  
+I will create a separate issue to track and solve this problem.              
+
+
+
+"
+10574,New Feature,Resolved,Minor,Fixed,,2.19.0,None,None,Unknown,Luca Burgazzoli,Luca Burgazzoli,0,1,12/8/2016 13:31,12/21/2016 17:59,12/21/2016 17:59,"
+
+To leverage i.e. DiscoveryClient for ServiceCall EIP
+
+","
+
+    There are no comments yet on this issue.
+ "
+10575,Improvement,Resolved,Major,Fixed,,"2.17.5,                                            2.18.2,                                            2.19.0",camel-snakeyaml,None,Unknown,Luca Burgazzoli,Luca Burgazzoli,0,2,12/8/2016 13:32,12/12/2016 9:14,12/9/2016 16:20,,"
+
+
+
+
+
+ Thomas Diesler
+ added a comment  - 12/Dec/16 09:03 
+
+Commits related to this issue break wildfly-camel integration
+CrossRef: https://github.com/wildfly-extras/wildfly-camel/issues/1530 
+
+
+
+
+
+
+
+ Thomas Diesler
+ added a comment  - 12/Dec/16 09:03                    Commits related to this issue break wildfly-camel integration 
+
+ CrossRef:  https://github.com/wildfly-extras/wildfly-camel/issues/1530               
+
+
+
+
+
+
+
+
+ Luca Burgazzoli
+ added a comment  - 12/Dec/16 09:14 
+
+this may be expected as you now need to register the POJOs you want to de-serialize, test have been updated too.
+ping me if you need any help 
+
+
+
+
+
+
+
+ Luca Burgazzoli
+ added a comment  - 12/Dec/16 09:14                    this may be expected as you now need to register the POJOs you want to de-serialize, test have been updated too. 
+ping me if you need any help              
+
+
+
+"
+10576,Improvement,Resolved,Major,Fixed,,2.19.0,camel-snakeyaml,None,Unknown,Luca Burgazzoli,Luca Burgazzoli,0,1,12/8/2016 13:34,12/13/2016 16:24,12/13/2016 16:24,,"
+
+    There are no comments yet on this issue.
+ "
+10577,Improvement,Resolved,Major,Fixed,,"2.18.2,                                            2.19.0",camel-jetty,None,Unknown,Andrea Cosentino,Christoph Läubrich,0,3,12/8/2016 14:06,1/13/2017 8:53,1/12/2017 7:16,"
+
+Camel-Jetty9 uses BufferingResponseListener without any arguments when retriving content from URLs.
+This leads to the problem that you can retrive a maximum of 2MiB from a server, e.g. the following code
+
+public void configure() throws Exception {
+
+                from(""timer://test?repeatCount=1"")
+                .log(""Start download..."")
+                .to(""jetty:http://mirror.netcologne.de/apache.org/camel/apache-camel/2.18.1/apache-camel-2.18.1.zip"")
+                .log(""Download done!"");
+
+            }
+
+leads to
+
+org.apache.camel.CamelExchangeException: JettyClient failed cause by: Buffering capacity exceeded. Exchange[ID-laeubi4core-60072-1481204922807-0-2]. Caused by: [java.lang.IllegalArgumentException - Buffering capacity exceeded]
+	at org.apache.camel.component.jetty9.JettyContentExchange9.doTaskCompleted(JettyContentExchange9.java:156)
+	at org.apache.camel.component.jetty9.JettyContentExchange9$2.onComplete(JettyContentExchange9.java:222)
+	at org.eclipse.jetty.client.ResponseNotifier.notifyComplete(ResponseNotifier.java:193)
+	at org.eclipse.jetty.client.ResponseNotifier.notifyComplete(ResponseNotifier.java:185)
+	at org.eclipse.jetty.client.HttpReceiver.terminateResponse(HttpReceiver.java:456)
+	at org.eclipse.jetty.client.HttpReceiver.terminateResponse(HttpReceiver.java:437)
+	at org.eclipse.jetty.client.HttpReceiver.responseHeaders(HttpReceiver.java:280)
+	at org.eclipse.jetty.client.http.HttpReceiverOverHTTP.headerComplete(HttpReceiverOverHTTP.java:230)
+	at org.eclipse.jetty.http.HttpParser.parseHeaders(HttpParser.java:1038)
+	at org.eclipse.jetty.http.HttpParser.parseNext(HttpParser.java:1266)
+	at org.eclipse.jetty.client.http.HttpReceiverOverHTTP.parse(HttpReceiverOverHTTP.java:158)
+	at org.eclipse.jetty.client.http.HttpReceiverOverHTTP.process(HttpReceiverOverHTTP.java:119)
+	at org.eclipse.jetty.client.http.HttpReceiverOverHTTP.receive(HttpReceiverOverHTTP.java:69)
+	at org.eclipse.jetty.client.http.HttpChannelOverHTTP.receive(HttpChannelOverHTTP.java:90)
+	at org.eclipse.jetty.client.http.HttpConnectionOverHTTP.onFillable(HttpConnectionOverHTTP.java:114)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:273)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:95)
+	at org.eclipse.jetty.io.SelectChannelEndPoint$2.run(SelectChannelEndPoint.java:93)
+	at org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.produceAndRun(ExecuteProduceConsume.java:246)
+	at org.eclipse.jetty.util.thread.strategy.ExecuteProduceConsume.run(ExecuteProduceConsume.java:156)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:654)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:572)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.IllegalArgumentException: Buffering capacity exceeded
+	at org.eclipse.jetty.client.util.BufferingResponseListener.onHeaders(BufferingResponseListener.java:75)
+	at org.eclipse.jetty.client.ResponseNotifier.notifyHeaders(ResponseNotifier.java:103)
+	at org.eclipse.jetty.client.ResponseNotifier.notifyHeaders(ResponseNotifier.java:95)
+	at org.eclipse.jetty.client.HttpReceiver.responseHeaders(HttpReceiver.java:259)
+	... 16 more
+
+The maximum size should at least be configurable (even though it is not recommended to do so since it seem to reserve the full buffer space on each request then).
+It might be even better to use InputStreamResponseListener instead to place an input stream in the body.
+
+","
+
+
+
+
+
+ Christoph Läubrich
+ added a comment  - 08/Dec/16 14:11   - edited 
+
+Others are also affected by this bug, see 
+
+https://github.com/fcrepo4-labs/fcrepo-api-x/issues/76
+http://stackoverflow.com/questions/40604539/camel-jetty-buffering-capacity-exceeded
+http://stackoverflow.com/questions/36546655/camel-jetty-http-proxy-large-response-data-casue-issue-buffering-capacity-exc
+
+
+
+
+
+
+
+
+
+ Christoph Läubrich
+ added a comment  - 08/Dec/16 14:11   - edited                   Others are also affected by this bug, see  
+ 
+	  https://github.com/fcrepo4-labs/fcrepo-api-x/issues/76  
+	  http://stackoverflow.com/questions/40604539/camel-jetty-buffering-capacity-exceeded  
+	  http://stackoverflow.com/questions/36546655/camel-jetty-http-proxy-large-response-data-casue-issue-buffering-capacity-exc  
+ 
+             
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 08/Dec/16 20:07 
+
+You are welcome to work on a patch / github PR that uses that listener instead. 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 08/Dec/16 20:07                    You are welcome to work on a patch / github PR that uses that listener instead.              
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 10/Jan/17 08:57 
+
+GitHub user kevinearls opened a pull request:
+ https://github.com/apache/camel/pull/1388
+ CAMEL-10577 replace BufferingResponseListener with InputStreamRespons…
+    …eListener to avoid hardcoded 2MB limit
+You can merge this pull request into a Git repository by running:
+    $ git pull https://github.com/kevinearls/camel CAMEL-10577
+Alternatively you can review and apply these changes as the patch at:
+ https://github.com/apache/camel/pull/1388.patch
+To close this pull request, make a commit to your master/trunk branch
+with (at least) the following in the commit message:
+    This closes #1388
+
+commit 41cd808b813d0919dea28c31851c1eb056310e82
+Author: Kevin Earls <kevin@kevinearls.com>
+Date:   2017-01-10T08:56:40Z
+ CAMEL-10577 replace BufferingResponseListener with InputStreamResponseListener to avoid hardcoded 2MB limit
+ 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 10/Jan/17 08:57                    GitHub user kevinearls opened a pull request: 
+
+      https://github.com/apache/camel/pull/1388  
+
+       CAMEL-10577   replace BufferingResponseListener with InputStreamRespons… 
+
+     …eListener to avoid hardcoded 2MB limit 
+
+ You can merge this pull request into a Git repository by running: 
+
+     $ git pull  https://github.com/kevinearls/camel    CAMEL-10577   
+
+ Alternatively you can review and apply these changes as the patch at: 
+
+      https://github.com/apache/camel/pull/1388.patch  
+
+ To close this pull request, make a commit to your master/trunk branch 
+with (at least) the following in the commit message: 
+
+     This closes #1388 
+
+ 
+ commit 41cd808b813d0919dea28c31851c1eb056310e82 
+Author: Kevin Earls <kevin@kevinearls.com> 
+Date:   2017-01-10T08:56:40Z 
+
+       CAMEL-10577   replace BufferingResponseListener with InputStreamResponseListener to avoid hardcoded 2MB limit 
+
+              
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 13/Jan/17 08:53 
+
+Github user asfgit closed the pull request at:
+ https://github.com/apache/camel/pull/1388 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 13/Jan/17 08:53                    Github user asfgit closed the pull request at: 
+
+      https://github.com/apache/camel/pull/1388               
+
+
+
+"
+10578,Bug,Resolved,Major,Fixed,"2.16.4,                                            2.17.4,                                            2.18.1","2.16.5,                                            2.17.5,                                            2.18.2",camel-cxf,None,Unknown,Daniel Kulp,Daniel Kulp,0,1,12/8/2016 17:47,12/9/2016 16:07,12/9/2016 16:07,"
+
+With a doc/literal endpoint using PAYLOAD mode, if a client sends a request where the child element of the Body uses a default namespace and that namespace is defined on the soap envelope or soap body (and not the element itself), you either get an exception of:
+1) (insecure message, no WSS4J processing)
+
+org.xml.sax.SAXParseException: Element or attribute do not match QName production: QName::=(NCName':')?NCName. 
+    at org.apache.camel.impl.converter.BaseTypeConverterRegistry.createTypeConversionException(BaseTypeConverterRegistry.java:610)[75:org.apache.camel.camel-core:2.16.3]
+    at org.apache.camel.impl.converter.BaseTypeConverterRegistry.convertTo(BaseTypeConverterRegistry.java:137)[75:org.apache.camel.camel-core:2.16.3]
+
+
+2) Secure message:
+
+org.w3c.dom.DOMException: NAMESPACE_ERR: An attempt is made to create or change an object in a way which is incorrect with regard to namespaces.
+    at com.sun.org.apache.xerces.internal.dom.CoreDocumentImpl.checkNamespaceWF(CoreDocumentImpl.java:2535)[:1.8.0_66]
+    at com.sun.org.apache.xerces.internal.dom.AttrNSImpl.setName(AttrNSImpl.java:93)[:1.8.0_66]
+    at com.sun.org.apache.xerces.internal.dom.AttrNSImpl.<init>(AttrNSImpl.java:78)[:1.8.0_66]
+    at com.sun.org.apache.xerces.internal.dom.CoreDocumentImpl.createAttributeNS(CoreDocumentImpl.java:2164)[:1.8.0_66]
+    at com.sun.xml.messaging.saaj.soap.SOAPDocumentImpl.createAttributeNS(SOAPDocumentImpl.java:186)[162:org.apache.servicemix.bundles.saaj-impl:1.3.23.2]
+    at com.sun.xml.messaging.saaj.soap.SOAPDocumentImpl.createAttribute(SOAPDocumentImpl.java:153)[162:org.apache.servicemix.bundles.saaj-impl:1.3.23.2]
+    at com.sun.org.apache.xerces.internal.dom.ElementImpl.setAttribute(ElementImpl.java:498)[:1.8.0_66]
+    at org.apache.camel.component.cxf.DefaultCxfBinding.addNamespace(DefaultCxfBinding.java:764)[76:org.apache.camel.camel-cxf:2.16.3]
+
+
+both are due to camel-cxf/DefaultCxfBinding.addNamespaces not properly adding default namespace attributes to the DOM.
+
+","
+
+    There are no comments yet on this issue.
+ "
+10579,Bug,Resolved,Minor,Fixed,"2.17.2,                                            2.18.1","2.17.5,                                            2.18.2,                                            2.19.0",camel-soap,soap11,Novice,Claus Ibsen,Jonathan Scholis,0,3,12/8/2016 19:51,12/13/2016 0:07,12/12/2016 9:11,"
+
+The Soap11DataFormatAdapter class has the same issue that was previously fixed in the Soap12DataFormatAdapter class (CAMEL-8708).  Specifically, it throws a NullPointerException in the event of a missing SOAP fault detail, which is allowed per specifications (https://www.w3.org/TR/2000/NOTE-SOAP-20000508/#_Ref477795995).  I believe the same fix should be applied to the Soap11DataFormatAdapter code.
+
+","
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 08/Dec/16 20:03 
+
+You are welcome to provide a patch file or better as a github PR
+http://camel.apache.org/contributing 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 08/Dec/16 20:03                    You are welcome to provide a patch file or better as a github PR 
+ http://camel.apache.org/contributing               
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 11/Dec/16 16:00 
+
+GitHub user scholisj opened a pull request:
+ https://github.com/apache/camel/pull/1342
+    Fix for CAMEL-10579.  Similar to fix for CAMEL-8708, but for SOAP 1.1.
+You can merge this pull request into a Git repository by running:
+    $ git pull https://github.com/scholisj/camel master
+Alternatively you can review and apply these changes as the patch at:
+ https://github.com/apache/camel/pull/1342.patch
+To close this pull request, make a commit to your master/trunk branch
+with (at least) the following in the commit message:
+    This closes #1342
+
+commit 5c2f5da5a99b3098e2360841d5689fde8f869cf4
+Author: Jonathan Scholis <scholisj@10.0.0.2>
+Date:   2016-12-11T15:56:59Z
+    Fix for CAMEL-10579.  Similar to fix for CAMEL-8708, but for SOAP 1.1.
+ 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 11/Dec/16 16:00                    GitHub user scholisj opened a pull request: 
+
+      https://github.com/apache/camel/pull/1342  
+
+     Fix for   CAMEL-10579  .  Similar to fix for   CAMEL-8708  , but for SOAP 1.1. 
+
+
+
+ You can merge this pull request into a Git repository by running: 
+
+     $ git pull  https://github.com/scholisj/camel  master 
+
+ Alternatively you can review and apply these changes as the patch at: 
+
+      https://github.com/apache/camel/pull/1342.patch  
+
+ To close this pull request, make a commit to your master/trunk branch 
+with (at least) the following in the commit message: 
+
+     This closes #1342 
+
+ 
+ commit 5c2f5da5a99b3098e2360841d5689fde8f869cf4 
+Author: Jonathan Scholis <scholisj@10.0.0.2> 
+Date:   2016-12-11T15:56:59Z 
+
+     Fix for   CAMEL-10579  .  Similar to fix for   CAMEL-8708  , but for SOAP 1.1. 
+
+              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 12/Dec/16 09:11 
+
+Thanks for the PR 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 12/Dec/16 09:11                    Thanks for the PR              
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 13/Dec/16 00:07 
+
+Github user scholisj closed the pull request at:
+ https://github.com/apache/camel/pull/1342 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 13/Dec/16 00:07                    Github user scholisj closed the pull request at: 
+
+      https://github.com/apache/camel/pull/1342               
+
+
+
+"
+10580,Bug,Resolved,Major,Invalid,2.16.1,,camel-activemq,None,Unknown,Andrea Cosentino,Anh Nguyen,0,2,12/9/2016 7:50,12/9/2016 8:12,12/9/2016 7:55,"
+
+I use camel-activeMQ-spring
+and I have issue: java heap space.
+Log: [Thread-9] o.s.b.f.s.DisposableBeanAdapter : Invocation of destroy method failed on bean with name 'camelContext': java.lang.OutOfMemoryError: Java heap space
+Please suppor me, 
+
+","
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 09/Dec/16 07:55 
+
+Please use the users mailing list for this problem. Thanks. 
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 09/Dec/16 07:55                    Please use the users mailing list for this problem. Thanks.              
+
+
+
+
+
+
+
+
+ Anh Nguyen
+ added a comment  - 09/Dec/16 08:09 
+
+Please help me, ancosen
+I don't understand mailing list. 
+
+
+
+
+
+
+
+ Anh Nguyen
+ added a comment  - 09/Dec/16 08:09                    Please help me,  ancosen  
+I don't understand mailing list.              
+
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 09/Dec/16 08:12 
+
+Subscribe yourself to Users mailing list
+http://camel.apache.org/mailing-lists.html
+Then send an email to 	
+users@camel.apache.org
+with your problem, logs etc. 
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 09/Dec/16 08:12                    Subscribe yourself to Users mailing list 
+
+  http://camel.apache.org/mailing-lists.html  
+
+ Then send an email to 	 
+users@camel.apache.org 
+
+ with your problem, logs etc.              
+
+
+
+"
+10581,Bug,Resolved,Major,Fixed,2.16.3,"2.17.5,                                            2.18.2,                                            2.19.0",camel-core,"password
+raw
+sftp
+toD",Unknown,Claus Ibsen,Arpit Goyal,0,1,12/9/2016 10:12,1/5/2017 0:31,12/14/2016 10:38,"
+
+We have SFTP passwords which have special characters and hence we tried to use the RAW function. On testing we saw that the RAW doesn't work and it still fails.
+On debugging we realize that we are using toD(""sftp://...."") and not to(""sftp://...""). As toD has been introduced later, I guess support for RAW was missed 
+Camel Version: 2.16.3
+URL: sftp://10.14.112.183:8686/customer?username=tester&password=RAW(abXNd+4nfzS)&stepwise=false&disconnect=true&reconnectDelay=5000&autoCreate=false&fileExist=Override&connectTimeout=300000
+Code Fails at - org.apache.camel.model.ToDynamicDefinition.createExpression(RouteContext)  - line 86 or 117 (depending on your viewpoint).
+
+Line 86: String[] parts = uri.split(""+"");
+Line  117: We concat expressions, without realizing that + was within the RAW function.
+
+Regards,
+Arpit.
+
+","
+
+
+
+
+
+ Arpit Goyal
+ added a comment  - 05/Jan/17 00:31 
+
+davsclaus gzurowski Any way I can find out when the 2.18.2 will be released. Checked - http://camel.apache.org/camel-2182-release.html but didn't find some definitive date.  
+
+
+
+
+
+
+
+ Arpit Goyal
+ added a comment  - 05/Jan/17 00:31                     davsclaus   gzurowski  Any way I can find out when the 2.18.2 will be released. Checked -  http://camel.apache.org/camel-2182-release.html  but didn't find some definitive date.               
+
+
+
+"
+10582,Bug,Resolved,Minor,Fixed,2.18.1,"2.17.5,                                            2.18.2,                                            2.19.0",camel-spring-integration,easyfix,Novice,Claus Ibsen,Boris Kuzmic,0,3,12/9/2016 12:50,12/12/2016 9:04,12/12/2016 9:04,"
+
+When SpringIntegrationMessage is copied from another SpringIntegrationMessage that already has siMessage headers, exception is thrown:
+java.lang.UnsupportedOperationException: MessageHeaders is immutable.
+Which is a valid exception since Spring Message headers (the whole message as well) are immutable.
+
+","
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 09/Dec/16 15:38 
+
+GitHub user bkuzmic opened a pull request:
+ https://github.com/apache/camel/pull/1340
+ CAMEL-10582: Fixing copying of immutable Spring headers
+    Please consider merging this fix to allow complete Spring integration work correctly.
+You can merge this pull request into a Git repository by running:
+    $ git pull https://github.com/bkuzmic/camel CAMEL-10582
+Alternatively you can review and apply these changes as the patch at:
+ https://github.com/apache/camel/pull/1340.patch
+To close this pull request, make a commit to your master/trunk branch
+with (at least) the following in the commit message:
+    This closes #1340
+
+commit 06ca63894a17db1ea872a37b36846bdce5f0b1c3
+Author: Boris Kuzmic <boris.kuzmic@ericsson.com>
+Date:   2016-12-09T15:35:34Z
+ CAMEL-10582: Fixing copying of immutable Spring headers
+ 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 09/Dec/16 15:38                    GitHub user bkuzmic opened a pull request: 
+
+      https://github.com/apache/camel/pull/1340  
+
+       CAMEL-10582  : Fixing copying of immutable Spring headers 
+
+     Please consider merging this fix to allow complete Spring integration work correctly. 
+
+ You can merge this pull request into a Git repository by running: 
+
+     $ git pull  https://github.com/bkuzmic/camel    CAMEL-10582   
+
+ Alternatively you can review and apply these changes as the patch at: 
+
+      https://github.com/apache/camel/pull/1340.patch  
+
+ To close this pull request, make a commit to your master/trunk branch 
+with (at least) the following in the commit message: 
+
+     This closes #1340 
+
+ 
+ commit 06ca63894a17db1ea872a37b36846bdce5f0b1c3 
+Author: Boris Kuzmic <boris.kuzmic@ericsson.com> 
+Date:   2016-12-09T15:35:34Z 
+
+       CAMEL-10582  : Fixing copying of immutable Spring headers 
+
+              
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 12/Dec/16 09:04 
+
+Github user asfgit closed the pull request at:
+ https://github.com/apache/camel/pull/1340 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 12/Dec/16 09:04                    Github user asfgit closed the pull request at: 
+
+      https://github.com/apache/camel/pull/1340               
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 12/Dec/16 09:04 
+
+Thanks for the PR 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 12/Dec/16 09:04                    Thanks for the PR              
+
+
+
+"
+10583,Task,Resolved,Trivial,Fixed,,2.19.0,documentation,None,Unknown,Claus Ibsen,Bob Paulin,0,2,12/9/2016 14:07,12/9/2016 14:25,12/9/2016 14:25,"
+
+Currently the http://camel.apache.org/json.html  states:
+Finally use the Camel JacksonDataFormat to marshall the above POJO to JSON.
+from(""direct:inPojoAgeView"").marshal().json(TestPojoView.class, Views.Age.class);
+Note that the weight field is missing in the resulting JSON:
+{""age"":30, ""weight"":70}
+
+The result is incorrect.  Should read:
+{""age"":30, ""height"":190}
+
+This matches the JacksonMarshalViewTest unit test.  
+
+","
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 09/Dec/16 14:25 
+
+Thanks it was the height field that was missing 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 09/Dec/16 14:25                    Thanks it was the height field that was missing              
+
+
+
+"
+10584,Improvement,Resolved,Major,Fixed,,2.19.0,tooling,None,Unknown,Luca Burgazzoli,Luca Burgazzoli,0,1,12/9/2016 14:28,12/9/2016 17:53,12/9/2016 17:53,"
+
+In *AutoConfiguration classes generated by camel-package-plugin, there is a check like 
+
+if (myInstance instanceof CamelContextAware) {
+    ((CamelContextAware) dataformat).setCamelContext(camelContext);
+}
+
+
+This check may fail at compile time if myInstance is final and it is not an instance of CamelContextAware which make not possible to write final classes.
+We should do something like:
+
+if (CamelContextAware.class.isAssignableFrom(MyInstanceType.class)) {
+    CamelContextAware context = CamelContextAware.class.cast(myInstance);
+    if (context != null) {
+        context.setCamelContext(camelContext);
+    }
+}
+
+
+
+","
+
+    There are no comments yet on this issue.
+ "
+10585,Improvement,Resolved,Major,Fixed,,2.19.0,camel-kafka,None,Unknown,Claus Ibsen,James Strachan,0,5,12/9/2016 16:55,2/15/2017 10:24,2/15/2017 10:24,"
+
+it would be nice to be able to use a URL more like ActiveMQ when working with kafka. e.g.
+
+kafka:serverName:port/topicName
+
+
+also missing off the port if its not the default port (9092) would be nice too
+
+kafka:serverName/topicName
+
+
+
+","
+
+
+
+
+
+ James Strachan
+ added a comment  - 09/Dec/16 16:56 
+
+wonder if the groupId should be (optionally) after the topic name? 
+
+kafka:serverName/topicName/groupId
+
+ 
+
+
+
+
+
+
+
+ James Strachan
+ added a comment  - 09/Dec/16 16:56                    wonder if the groupId should be (optionally) after the topic name?  
+  
+ kafka:serverName/topicName/groupId
+ 
+               
+
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 13/Jan/17 10:10 
+
+antoine.dessaigne, I've seen you're very active in the camel-kafka component. Do you want to have a look? 
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 13/Jan/17 10:10                     antoine.dessaigne , I've seen you're very active in the camel-kafka component. Do you want to have a look?              
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 14/Feb/17 11:07 
+
+GitHub user godbolerr opened a pull request:
+ https://github.com/apache/camel/pull/1463
+ CAMEL-10585: Changes to URL format to include topic name and default …
+    Implemented changes as per description. 
+    If this pattern is not followed for URI, original URI is still valid.
+    1. Unit tests related to change is passing but unit test related to some other functionality is failing. Need to check on the same. [KafkaConsumerOffsetRepositoryEmptyTest]
+    2. mvn clean install -Psourcecheck results in the following error which was present in the initial codebase as well.
+    KafkaComponentTest.java:21: Wrong order for 'java.util.HashMap' import. [ImportOrder]
+You can merge this pull request into a Git repository by running:
+    $ git pull https://github.com/godbolerr/camel master
+Alternatively you can review and apply these changes as the patch at:
+ https://github.com/apache/camel/pull/1463.patch
+To close this pull request, make a commit to your master/trunk branch
+with (at least) the following in the commit message:
+    This closes #1463
+
+commit 8f9a69516adbf4be952cca86c78f72d4ddc14092
+Author: admin <admin@test.com>
+Date:   2017-02-14T11:00:32Z
+ CAMEL-10585: Changes to URL format to include topic name and default port
+ 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 14/Feb/17 11:07                    GitHub user godbolerr opened a pull request: 
+
+      https://github.com/apache/camel/pull/1463  
+
+       CAMEL-10585  : Changes to URL format to include topic name and default … 
+
+     Implemented changes as per description.  
+
+     If this pattern is not followed for URI, original URI is still valid. 
+
+     1. Unit tests related to change is passing but unit test related to some other functionality is failing. Need to check on the same.  [KafkaConsumerOffsetRepositoryEmptyTest]  
+    2. mvn clean install -Psourcecheck results in the following error which was present in the initial codebase as well. 
+
+     KafkaComponentTest.java:21: Wrong order for 'java.util.HashMap' import.  [ImportOrder]  
+
+
+ You can merge this pull request into a Git repository by running: 
+
+     $ git pull  https://github.com/godbolerr/camel  master 
+
+ Alternatively you can review and apply these changes as the patch at: 
+
+      https://github.com/apache/camel/pull/1463.patch  
+
+ To close this pull request, make a commit to your master/trunk branch 
+with (at least) the following in the commit message: 
+
+     This closes #1463 
+
+ 
+ commit 8f9a69516adbf4be952cca86c78f72d4ddc14092 
+Author: admin <admin@test.com> 
+Date:   2017-02-14T11:00:32Z 
+
+       CAMEL-10585  : Changes to URL format to include topic name and default port 
+
+              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 15/Feb/17 08:11 
+
+Maybe we should also allow to configure the servers on the KafkaComponent instead so its like JMS, eg you dont set the ActiveMQ url on the JMS endpoint either.
+Then its just
+
+from(""kafka:myTopic"")
+...
+
+
+And you can setup the urls on the KafkaComponent
+
+KafkaComponent kafka = ...
+kafka.setServerName(...)
+
+ 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 15/Feb/17 08:11                    Maybe we should also allow to configure the servers on the KafkaComponent instead so its like JMS, eg you dont set the ActiveMQ url on the JMS endpoint either. 
+
+ Then its just 
+
+  
+ from( ""kafka:myTopic"" )
+...
+ 
+  
+
+ And you can setup the urls on the KafkaComponent 
+  
+ KafkaComponent kafka = ...
+kafka.setServerName(...)
+ 
+               
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 15/Feb/17 09:28 
+
+Github user godbolerr closed the pull request at:
+ https://github.com/apache/camel/pull/1463 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 15/Feb/17 09:28                    Github user godbolerr closed the pull request at: 
+
+      https://github.com/apache/camel/pull/1463               
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 15/Feb/17 10:24 
+
+The brokers should now be configured on component level or as uri parameter instead of in the context-path. And the topic is now in the context-path so its like using JMS component 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 15/Feb/17 10:24                    The brokers should now be configured on component level or as uri parameter instead of in the context-path. And the topic is now in the context-path so its like using JMS component              
+
+
+
+"
+10586,Improvement,Resolved,Major,Fixed,,2.19.0,camel-kafka,None,Unknown,Claus Ibsen,James Strachan,0,6,12/9/2016 17:35,3/4/2017 12:30,3/4/2017 12:22,"
+
+when using, say, JMS or activemq endpoints you can send text to a destination and it all kinda works OOTB. However it seems pretty hard to actually send anyhting to the kafka endpoint. 
+I wonder if we could do a bit more to make it easier to use as a camel endpoint?
+e.g. if I invoke a HTTP endpoint then pipe the result to Kafka I get:
+
+org.apache.kafka.common.errors.SerializationException: Can't convert value of class org.apache.camel.converter.stream.CachedOutputStream$WrappedInputStream to class org.apache.kafka.common.serialization.StringSerializer specified in value.serializer
+
+
+seems like it'd be nice if there's no configured serializer to assume its bytes / string?
+If I send to the dataformat endpoint first to force conversion to a String:
+
+to(""dataformat:string:unmarshal"").
+to(""kafka://kafka:9092?topic=cheese&groupId=group1"")
+
+
+then I get: 
+
+17:34:10.212 [Camel (Funktion) thread #0 - timer://foo] WARN  o.a.c.component.kafka.KafkaProducer - No message key or partition key set
+
+
+and there's no easy way to pass in a message key or partition key via the URI parameters from what I can see. 
+I wonder if we should support a URI parameter for setting the partition key + message key?
+
+","
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 09/Dec/16 19:53 
+
+Agreed. It is difficult to setup a Kafka endpoint at the moment. 
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 09/Dec/16 19:53                    Agreed. It is difficult to setup a Kafka endpoint at the moment.              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 03/Mar/17 20:06 
+
+> and there's no easy way to pass in a message key or partition key via the URI parameters from what I can see.
+You can now configure this from the endpoint using key and partitionKey options. If provided they take precedence over headers. 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 03/Mar/17 20:06                    > and there's no easy way to pass in a message key or partition key via the URI parameters from what I can see. 
+
+ You can now configure this from the endpoint using key and partitionKey options. If provided they take precedence over headers.              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 03/Mar/17 20:21 
+
+Yeah we should auto detect the message body type and use appropiate serializers if none has been configured (string vs bytes etc) as you say 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 03/Mar/17 20:21                    Yeah we should auto detect the message body type and use appropiate serializers if none has been configured (string vs bytes etc) as you say              
+
+
+
+
+
+
+
+
+ Antoine DESSAIGNE
+ added a comment  - 03/Mar/17 21:20 
+
+Hello.
+By default, I wouldn't automatically choose the serializer based on the body type. In Kafka, the serializer needs to be the same in the consumer and producer on your whole infrastructure.
+That being said, maybe we can leverage Camel type converters in order to ease the usage of Kafka. We can force the conversion to the type expected by the Kafka Serializer.
+My 2 cents, hope this helps.
+Antoine. 
+
+
+
+
+
+
+
+ Antoine DESSAIGNE
+ added a comment  - 03/Mar/17 21:20                    Hello. 
+By default, I wouldn't automatically choose the serializer based on the body type. In Kafka, the serializer needs to be the same in the consumer and producer on your whole infrastructure. 
+That being said, maybe we can leverage Camel type converters in order to ease the usage of Kafka. We can force the conversion to the type expected by the Kafka Serializer. 
+My 2 cents, hope this helps. 
+Antoine.              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 04/Mar/17 10:02 
+
+Antonie, yeah that is a good idea. This is done now, so based on what serializer class configured it attempts to convert to that type first, such as string, byte[] and so forth.
+It would have been nicer if we made configuring those serializer/deserializer easier with 
+serialize=string | byte[] | custom
+deserialize = string | byte[] | custom
+then its was an enum of those, and if you want custom you just set it to custom and then those FQN class name must be configured in all those options.
+What about they key, when would you use a different serialize / deserialize than the message body itself? Currently its using the same as the body. But are there use-cases where you use a Long key instead of just String ? 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 04/Mar/17 10:02                    Antonie, yeah that is a good idea. This is done now, so based on what serializer class configured it attempts to convert to that type first, such as string, byte[] and so forth. 
+
+ It would have been nicer if we made configuring those serializer/deserializer easier with  
+
+ serialize=string | byte[] | custom 
+deserialize = string | byte[] | custom 
+
+ then its was an enum of those, and if you want custom you just set it to custom and then those FQN class name must be configured in all those options. 
+
+ What about they key, when would you use a different serialize / deserialize than the message body itself? Currently its using the same as the body. But are there use-cases where you use a Long key instead of just String ?              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 04/Mar/17 10:05 
+
+jstrachan if you try again with 2.19.0-SNAPSHOT then it should be easier. It uses string out of the box, and you wont need to marshal to string first etc. And you can set the key and partition key in the endpoint uri
+
+to(""kafka://kafka:9092?topic=cheese&groupId=group1&key=1234&partitionKey=2"")
+
+ 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 04/Mar/17 10:05                     jstrachan  if you try again with 2.19.0-SNAPSHOT then it should be easier. It uses string out of the box, and you wont need to marshal to string first etc. And you can set the key and partition key in the endpoint uri 
+
+  
+ to( ""kafka: //kafka:9092?topic=cheese&groupId=group1&key=1234&partitionKey=2"" ) 
+ 
+               
+
+
+
+
+
+
+
+
+ James Strachan
+ added a comment  - 04/Mar/17 10:24   - edited 
+
+Awesome!! 
+I'd also love a `kafka-topic` component too that uses the Component to configure the host/port and the endpoint just configures the topic like JMS; hopefully it can reuse the same Endpoint and just be a some different component level code to handle the URI -> endpoint stuff?
+
+to(""kafka-topic://cheese&groupId=group1&key=1234&partitionKey=2"")
+
+ 
+
+
+
+
+
+
+
+ James Strachan
+ added a comment  - 04/Mar/17 10:24   - edited                   Awesome!!  
+
+ I'd also love a `kafka-topic` component too that uses the Component to configure the host/port and the endpoint just configures the topic like JMS; hopefully it can reuse the same Endpoint and just be a some different component level code to handle the URI -> endpoint stuff? 
+
+  
+ to( ""kafka-topic: //cheese&groupId=group1&key=1234&partitionKey=2"" ) 
+ 
+               
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 04/Mar/17 10:30 
+
+You can configure the brokers on the component level, which in Spring Boot you can do use the auto configuration
+In pure Java its
+
+                KafkaComponent kafka = new KafkaComponent();
+                kafka.setBrokers(""{{kafka.host}}:{{kafka.port}}"");
+                camelContext.addComponent(""kafka"", kafka);
+
+
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 04/Mar/17 10:30                    You can configure the brokers on the component level, which in Spring Boot you can do use the auto configuration 
+
+ In pure Java its 
+  
+                 KafkaComponent kafka =  new  KafkaComponent();
+                kafka.setBrokers( ""{{kafka.host}}:{{kafka.port}}"" );
+                camelContext.addComponent( ""kafka"" , kafka);
+ 
+  
+             
+
+
+
+
+
+
+
+
+ Antoine DESSAIGNE
+ added a comment  - 04/Mar/17 12:30 
+
+Claus,
+Any serializer can be used for the key, it's driven by your business data. The key is used to compute the partition in which your message will be stored. Kafka only ensures ordering within a single partition. The key only makes sense for your particular data. For instance you can transfer server logs as string body with the IP address as key with the LongSerializer. 
+
+
+
+
+
+
+
+ Antoine DESSAIGNE
+ added a comment  - 04/Mar/17 12:30                    Claus, 
+Any serializer can be used for the key, it's driven by your business data. The key is used to compute the partition in which your message will be stored. Kafka only ensures ordering within a single partition. The key only makes sense for your particular data. For instance you can transfer server logs as string body with the IP address as key with the LongSerializer.              
+
+
+
+"
+10587,Bug,Resolved,Major,Abandoned,2.18.0,Future,camel-aws,None,Unknown,Unassigned,Sindre Mehus,1,2,12/12/2016 9:48,12/17/2020 15:28,12/17/2020 15:28,"
+
+org.apache.camel.component.aws.sqs.SqsConsumer creates a TimeoutExtender task for each message received in a batch, but these tasks should be started before processing the messages.
+Error can be reproduced as follows:
+1. Create an SQS-consuming route using maxMessagesPerPoll=10, extendMessageVisibility=true, visibilityTimeout=30, waitTimeSeconds=20.
+2. Add a process step in the route which just sleeps for a long time.
+3. Put 20-30 messages on the SQS queue.
+4. Start the route.
+5. Let's say the SQS consumer reads off 10 messages.
+6. Observe in the AWS SQS console that 10 messages are in-flight.
+7. After 30 seconds you can observe that only 1 message is in-flight. This is incorrect.
+
+","
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 01/Mar/17 09:41 
+
+Can you turn on trace logging on: org.apache.camel.component.aws.sqs.SqsConsumer
+As it should do a TRACE log when it extends the visibility, and then observe if it does that for all 10 messages.
+I also change the code to start the scheduler before the consumer so the extender is always created in case of some startup race condition otherwise. 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 01/Mar/17 09:41                    Can you turn on trace logging on: org.apache.camel.component.aws.sqs.SqsConsumer 
+
+ As it should do a TRACE log when it extends the visibility, and then observe if it does that for all 10 messages. 
+
+ I also change the code to start the scheduler before the consumer so the extender is always created in case of some startup race condition otherwise.              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 01/Mar/17 09:44 
+
+As the extender task is one per message, I think it would make more sense to make it one per batch, and then let it loop all the messages in the batch. Otherwise if you have 100 messages in a batch its 100 tasks on the thread pool to execute and there is only 1 thread.
+In Camel JMX you should see the SqsTimeoutExtender thread pool and you can see how deep its task queue is at runtime and see if there is outstanding tasks that are not run. 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 01/Mar/17 09:44                    As the extender task is one per message, I think it would make more sense to make it one per batch, and then let it loop all the messages in the batch. Otherwise if you have 100 messages in a batch its 100 tasks on the thread pool to execute and there is only 1 thread. 
+
+ In Camel JMX you should see the SqsTimeoutExtender thread pool and you can see how deep its task queue is at runtime and see if there is outstanding tasks that are not run.              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 01/Mar/17 09:46 
+
+We can maybe use the batch request instead (up to 10 messages)
+http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ChangeMessageVisibilityBatch.html
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 01/Mar/17 09:46                    We can maybe use the batch request instead (up to 10 messages) 
+ http://docs.aws.amazon.com/AWSSimpleQueueService/latest/APIReference/API_ChangeMessageVisibilityBatch.html  
+             
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 09/Sep/17 11:15 
+
+We had a little code fix, so anyone is welcome to test if this is still a problem with latest release 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 09/Sep/17 11:15                    We had a little code fix, so anyone is welcome to test if this is still a problem with latest release              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 26/Feb/18 13:18 
+
+Would be good to get tested on latest release 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 26/Feb/18 13:18                    Would be good to get tested on latest release              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 17/Dec/20 15:28 
+
+Try with latest release since many years has passed 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 17/Dec/20 15:28                    Try with latest release since many years has passed              
+
+
+
+"
+10588,New Feature,Resolved,Major,Fixed,,"2.18.2,                                            2.19.0",camel-servicenow,None,Unknown,Luca Burgazzoli,James Netherton,0,1,12/12/2016 11:36,12/12/2016 19:14,12/12/2016 19:14,"
+
+I don't see a way to configure an HTTP proxy for ServiceNow endpoints. We should add this so that it's consistent with other components.
+
+","
+
+    There are no comments yet on this issue.
+ "
+10589,Improvement,Resolved,Minor,Fixed,,"2.18.2,                                            2.19.0",camel-servicenow,None,Unknown,Luca Burgazzoli,Luca Burgazzoli,0,1,12/12/2016 12:54,12/12/2016 19:14,12/12/2016 19:14,,"
+
+    There are no comments yet on this issue.
+ "
+10590,Bug,Resolved,Major,Not A Problem,,2.19.0,camel-nats,None,Unknown,Andrea Cosentino,Thomas Diesler,0,3,12/12/2016 14:44,1/10/2017 14:54,1/10/2017 14:54,"
+
+
+15:25:17,492 SEVERE [org.jboss.arquillian.protocol.jmx.JMXTestRunner] (pool-3-thread-1) Failed: org.wildfly.camel.test.nats.NatsIntegrationTest.testNatsRoutes: java.lang.RuntimeException: Unable to invoke no-args constructor for class io.nats.client.ServerInfo. Register an InstanceCreator with Gson for this type may fix this problem.
+	at com.google.gson.internal.ConstructorConstructor$14.construct(ConstructorConstructor.java:226)
+	at com.google.gson.internal.bind.ReflectiveTypeAdapterFactory$Adapter.read(ReflectiveTypeAdapterFactory.java:210)
+	at com.google.gson.Gson.fromJson(Gson.java:887)
+	at com.google.gson.Gson.fromJson(Gson.java:852)
+	at com.google.gson.Gson.fromJson(Gson.java:801)
+	at com.google.gson.Gson.fromJson(Gson.java:773)
+	at io.nats.client.ServerInfo.createFromWire(ServerInfo.java:84)
+	at io.nats.client.ConnectionImpl.processInfo(ConnectionImpl.java:762)
+	at io.nats.client.ConnectionImpl.processExpectedInfo(ConnectionImpl.java:707)
+	at io.nats.client.ConnectionImpl.processConnectInit(ConnectionImpl.java:652)
+	at io.nats.client.ConnectionImpl.connect(ConnectionImpl.java:399)
+	at io.nats.client.ConnectionFactory.createConnection(ConnectionFactory.java:468)
+	at io.nats.client.ConnectionFactory.createConnection(ConnectionFactory.java:458)
+	at org.apache.camel.component.nats.NatsConsumer.getConnection(NatsConsumer.java:113)
+	at org.apache.camel.component.nats.NatsConsumer.doStart(NatsConsumer.java:67)
+	at org.apache.camel.support.ServiceSupport.start(ServiceSupport.java:61)
+	at org.apache.camel.impl.DefaultCamelContext.startService(DefaultCamelContext.java:3389)
+	at org.apache.camel.impl.DefaultCamelContext.doStartOrResumeRouteConsumers(DefaultCamelContext.java:3706)
+	at org.apache.camel.impl.DefaultCamelContext.doStartRouteConsumers(DefaultCamelContext.java:3642)
+	at org.apache.camel.impl.DefaultCamelContext.safelyStartRouteServices(DefaultCamelContext.java:3562)
+	at org.apache.camel.impl.DefaultCamelContext.doStartOrResumeRoutes(DefaultCamelContext.java:3326)
+	at org.apache.camel.impl.DefaultCamelContext.doStartCamel(DefaultCamelContext.java:3180)
+	at org.apache.camel.impl.DefaultCamelContext.access$000(DefaultCamelContext.java:190)
+	at org.apache.camel.impl.DefaultCamelContext$2.call(DefaultCamelContext.java:2975)
+	at org.apache.camel.impl.DefaultCamelContext$2.call(DefaultCamelContext.java:2971)
+	at org.apache.camel.impl.DefaultCamelContext.doWithDefinedClassLoader(DefaultCamelContext.java:2994)
+	at org.apache.camel.impl.DefaultCamelContext.doStart(DefaultCamelContext.java:2971)
+	at org.apache.camel.support.ServiceSupport.start(ServiceSupport.java:61)
+	at org.apache.camel.impl.DefaultCamelContext.start(DefaultCamelContext.java:2909)
+	at org.wildfly.camel.test.nats.NatsIntegrationTest.testNatsRoutes(NatsIntegrationTest.java:89)
+
+
+CrossRef: https://github.com/wildfly-extras/wildfly-camel/issues/1513
+
+","
+
+
+
+
+
+ Thomas Diesler
+ added a comment  - 12/Dec/16 14:51 
+
+Reverting to 0.7.1 does not fix the problem 
+
+
+
+
+
+
+
+ Thomas Diesler
+ added a comment  - 12/Dec/16 14:51                    Reverting to 0.7.1 does not fix the problem              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 13/Dec/16 11:31 
+
+ancosen I wonder if you have seen this?
+The unit tests requires a manual nats server so if possible maybe try to see if we can reproduce this with the plain unit tests.
+Or maybe this is some classloading issue when running in WildFly, which also means there can be a problem with classloading in OSGi etc. 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 13/Dec/16 11:31                     ancosen  I wonder if you have seen this? 
+
+ The unit tests requires a manual nats server so if possible maybe try to see if we can reproduce this with the plain unit tests. 
+Or maybe this is some classloading issue when running in WildFly, which also means there can be a problem with classloading in OSGi etc.              
+
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 13/Dec/16 15:19 
+
+This is weird. I'm try to look at the commit history first. 
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 13/Dec/16 15:19                    This is weird. I'm try to look at the commit history first.              
+
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 13/Dec/16 15:58 
+
+From the version perspective nothing has changed between 2.18.0 and 2.18.1
+JNats is at version 0.5.3 and Gson at version 2.7.
+
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 13/Dec/16 15:58                    From the version perspective nothing has changed between 2.18.0 and 2.18.1 
+
+ JNats is at version 0.5.3 and Gson at version 2.7. 
+             
+
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 13/Dec/16 16:09 
+
+But the problem is on 2.19.0-SNAPSHOT. Epic fail 
+I'll take a look there. 
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 13/Dec/16 16:09                    But the problem is on 2.19.0-SNAPSHOT. Epic fail   
+
+ I'll take a look there.              
+
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 10/Jan/17 14:54 
+
+This should be resolved from Widlfly-camel side. 
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 10/Jan/17 14:54                    This should be resolved from Widlfly-camel side.              
+
+
+
+"
+10591,Bug,Closed,Trivial,Fixed,2.19.0,,camel-smpp,None,,Unassigned,Pim Moerenhout,0,1,12/13/2016 9:44,12/13/2016 9:51,12/13/2016 9:51,"
+
+When reconnecting, the attempt is not printed in the log. Also I changed the logging to use slf4j style of printing parameter in the log statement.
+Pull request is https://github.com/apache/camel/pull/1343.
+
+","
+
+
+
+
+
+ Pim Moerenhout
+ added a comment  - 13/Dec/16 09:51 
+
+The pull request was picked up and merged. 
+
+
+
+
+
+
+
+ Pim Moerenhout
+ added a comment  - 13/Dec/16 09:51                    The pull request was picked up and merged.              
+
+
+
+"
+10592,Improvement,Resolved,Minor,Fixed,2.18.1,"2.18.2,                                            2.19.0",camel-sip,None,Unknown,Claus Ibsen,Aurelien Pupier,0,2,12/13/2016 14:05,12/19/2016 9:40,12/19/2016 9:40,"
+
+sip and sips components have the same Title and same description which can make it hard to differentiate in toolings
+What is also strange is that they have the exact same parameters
+
+","
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 14/Dec/16 09:28 
+
+They are the same, one for regular and another for secured, like http/https and others do. 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 14/Dec/16 09:28                    They are the same, one for regular and another for secured, like http/https and others do.              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 16/Dec/16 11:41 
+
+We could maybe try to make the tooling add (Secure) to the endpoint description for the sips. Or allow to specify both, where we then copy paste and add the (Secure) manually.
+https://github.com/apache/camel/blob/master/components/camel-sip/src/main/java/org/apache/camel/component/sip/SipEndpoint.java#L30
+So if we detect that there is multiple schemes, eg sip,sips. And if the scheme ends with s, then we add (Secured) in the title.
+https://github.com/apache/camel/blob/master/tooling/apt/src/main/java/org/apache/camel/tools/apt/EndpointAnnotationProcessor.java#L109
+Its all in that apt tooling that does this. 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 16/Dec/16 11:41                    We could maybe try to make the tooling add (Secure) to the endpoint description for the sips. Or allow to specify both, where we then copy paste and add the (Secure) manually. 
+ https://github.com/apache/camel/blob/master/components/camel-sip/src/main/java/org/apache/camel/component/sip/SipEndpoint.java#L30  
+
+ So if we detect that there is multiple schemes, eg sip,sips. And if the scheme ends with s, then we add (Secured) in the title. 
+ https://github.com/apache/camel/blob/master/tooling/apt/src/main/java/org/apache/camel/tools/apt/EndpointAnnotationProcessor.java#L109  
+
+ Its all in that apt tooling that does this.              
+
+
+
+"
+10593,New Feature,Resolved,Minor,Fixed,2.19.0,2.19.0,camel-salesforce,None,Unknown,Zoran Regvart,Zoran Regvart,0,3,12/13/2016 18:07,12/14/2016 15:32,12/14/2016 15:32,"
+
+Add support for Salesforce batch Composite API in order to save on round trip latency and network bandwidth.
+
+","
+
+
+
+
+
+ Zoran Regvart
+ added a comment  - 13/Dec/16 18:40 
+
+Missed to mention the issue number in title of PR (edited now), if the bot does not update here is a link to to github pull request. 
+
+
+
+
+
+
+
+ Zoran Regvart
+ added a comment  - 13/Dec/16 18:40                    Missed to mention the issue number in title of PR (edited now), if the bot does not update  here  is a link to to github pull request.              
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 14/Dec/16 12:20 
+
+Github user zregvart closed the pull request at:
+ https://github.com/apache/camel/pull/1344 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 14/Dec/16 12:20                    Github user zregvart closed the pull request at: 
+
+      https://github.com/apache/camel/pull/1344               
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 14/Dec/16 15:32 
+
+Do you mind updating the release notes with some details about this new salesforce stuff
+http://camel.apache.org/camel-219-release.html 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 14/Dec/16 15:32                    Do you mind updating the release notes with some details about this new salesforce stuff 
+ http://camel.apache.org/camel-219-release.html               
+
+
+
+"
+10594,Bug,Resolved,Major,Fixed,,"2.18.2,                                            2.19.0",camel-kafka,None,Unknown,Claus Ibsen,James Netherton,0,2,12/14/2016 9:48,12/14/2016 12:08,12/14/2016 12:08,"
+
+I happened to be running some camel-kafka unit tests with the log level set to DEBUG and noticed that the KafkaConsumer is not shut down correctly.
+When the Camel Kafka consumer is stopped, it invokes shutdownNow() on the ExecutorService. But this does not guarantee any running threads will be terminated.
+This is a bit of an issue when Camel runs in a container like Karaf or WildFly because the KafkaFetchRecords thread just keeps on running for the lifetime of the JVM. 
+It's simple to reproduce in a unit test:
+
+Enable DEBUG log level
+Start a Camel context with a Kafka consumer endpoint
+Stop the camel context
+Thread.sleep for some time (10 seconds or whatever). Then notice exception in the log output:
+
+
+[0m[32m07:09:44,247 DEBUG [org.apache.kafka.clients.NetworkClient] (Camel (camel-36) thread #134 - KafkaConsumer[test]) Error connecting to node 1 at localhost:9092:: java.nio.channels.ClosedByInterruptException
+	at java.nio.channels.spi.AbstractInterruptibleChannel.end(AbstractInterruptibleChannel.java:202)
+	at sun.nio.ch.SocketChannelImpl.connect(SocketChannelImpl.java:659)
+	at org.apache.kafka.common.network.Selector.connect(Selector.java:168)
+	at org.apache.kafka.clients.NetworkClient.initiateConnect(NetworkClient.java:498)
+	at org.apache.kafka.clients.NetworkClient.access$400(NetworkClient.java:48)
+	at org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater.maybeUpdate(NetworkClient.java:645)
+	at org.apache.kafka.clients.NetworkClient$DefaultMetadataUpdater.maybeUpdate(NetworkClient.java:552)
+	at org.apache.kafka.clients.NetworkClient.poll(NetworkClient.java:258)
+	at org.apache.kafka.clients.consumer.internals.ConsumerNetworkClient.clientPoll(ConsumerNetworkClient.java:360)
+	at org.apache.kafka.clients.consumer.internals.ConsumerNetworkClient.poll(ConsumerNetworkClient.java:224)
+	at org.apache.kafka.clients.consumer.internals.ConsumerNetworkClient.poll(ConsumerNetworkClient.java:192)
+	at org.apache.kafka.clients.consumer.internals.ConsumerNetworkClient.awaitMetadataUpdate(ConsumerNetworkClient.java:134)
+	at org.apache.kafka.clients.consumer.internals.AbstractCoordinator.ensureCoordinatorReady(AbstractCoordinator.java:183)
+	at org.apache.kafka.clients.consumer.KafkaConsumer.pollOnce(KafkaConsumer.java:974)
+	at org.apache.kafka.clients.consumer.KafkaConsumer.poll(KafkaConsumer.java:938)
+	at org.apache.camel.component.kafka.KafkaConsumer$KafkaFetchRecords.run(KafkaConsumer.java:130)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+
+
+
+","
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 14/Dec/16 12:05 
+
+Yeah there is a graceful shutdown we can use that is better, and also to break out that while loop if we are stopping 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 14/Dec/16 12:05                    Yeah there is a graceful shutdown we can use that is better, and also to break out that while loop if we are stopping              
+
+
+
+"
+10595,Improvement,Resolved,Trivial,Fixed,,2.19.0,camel-salesforce,None,Unknown,Zoran Regvart,Zoran Regvart,0,3,12/14/2016 10:04,12/14/2016 11:45,12/14/2016 11:00,"
+
+Fix Checkstyle issue reported at:
+camel/components/camel-salesforce/camel-salesforce-maven-plugin/src/main/java/org/apache/camel/maven/CamelSalesforceMojo.java:898:13: Boolean expression complexity is 8 (max allowed is 6). [BooleanExpressionComplexity]
+
+","
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 14/Dec/16 10:06 
+
+GitHub user zregvart opened a pull request:
+ https://github.com/apache/camel/pull/1347
+ CAMEL-10595  Fix Checkstyle in camel-salesforce-maven-plugin
+    Fixes checkstyle error originating in #1334
+You can merge this pull request into a Git repository by running:
+    $ git pull https://github.com/zregvart/camel salesforce-checkstyle
+Alternatively you can review and apply these changes as the patch at:
+ https://github.com/apache/camel/pull/1347.patch
+To close this pull request, make a commit to your master/trunk branch
+with (at least) the following in the commit message:
+    This closes #1347
+
+commit a35eaf7f099c03fbdc508eb47f8fdf5198c2557e
+Author: Zoran Regvart <zoran@regvart.com>
+Date:   2016-12-14T09:59:50Z
+    Fix Checkstyle in camel-salesforce-maven-plugin
+ 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 14/Dec/16 10:06                    GitHub user zregvart opened a pull request: 
+
+      https://github.com/apache/camel/pull/1347  
+
+       CAMEL-10595    Fix Checkstyle in camel-salesforce-maven-plugin 
+
+     Fixes checkstyle error originating in #1334 
+
+ You can merge this pull request into a Git repository by running: 
+
+     $ git pull  https://github.com/zregvart/camel  salesforce-checkstyle 
+
+ Alternatively you can review and apply these changes as the patch at: 
+
+      https://github.com/apache/camel/pull/1347.patch  
+
+ To close this pull request, make a commit to your master/trunk branch 
+with (at least) the following in the commit message: 
+
+     This closes #1347 
+
+ 
+ commit a35eaf7f099c03fbdc508eb47f8fdf5198c2557e 
+Author: Zoran Regvart <zoran@regvart.com> 
+Date:   2016-12-14T09:59:50Z 
+
+     Fix Checkstyle in camel-salesforce-maven-plugin 
+
+              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 14/Dec/16 11:00 
+
+A jira ticket is not needed for these kind of CS fixes 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 14/Dec/16 11:00                    A jira ticket is not needed for these kind of CS fixes              
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 14/Dec/16 11:45 
+
+Github user zregvart closed the pull request at:
+ https://github.com/apache/camel/pull/1347 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 14/Dec/16 11:45                    Github user zregvart closed the pull request at: 
+
+      https://github.com/apache/camel/pull/1347               
+
+
+
+"
+10596,New Feature,Resolved,Major,Fixed,,2.19.0,camel-core,None,Unknown,Claus Ibsen,Claus Ibsen,0,2,12/14/2016 10:28,3/2/2017 17:39,3/2/2017 17:39,"
+
+Sometimes people want to run a Camel route for 1 message, or until there are no more new messages, or stop after X seconds etc.
+We should provide some basic route policy / factory that people can use, and easily configure. And we can then add the logic to safely stop the routes while running, which can be a little tricky
+http://camel.apache.org/how-can-i-stop-a-route-from-a-route.html
+
+","
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 02/Mar/17 14:02 
+
+There is route policy and factory to setup this, and as well on the main and maven run plugin 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 02/Mar/17 14:02                    There is route policy and factory to setup this, and as well on the main and maven run plugin              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 02/Mar/17 14:23 
+
+For spring boot apps you can make it auto terminate
+
+# the name of Camel
+camel.springboot.name = SampleCamel
+
+camel.springboot.main-run-controller=true
+camel.springboot.main-run-controller-max-duration-messages=6
+
+
+
+However this is when NOT using spring-boot-starter-web (eg tomcat, undertow) as it then uses Camel to keep the JVM running which it can stop nicely. 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 02/Mar/17 14:23                    For spring boot apps you can make it auto terminate 
+  
+ # the name of Camel
+camel.springboot.name = SampleCamel
+
+camel.springboot.main-run-controller= true 
+camel.springboot.main-run-controller-max-duration-messages=6
+
+ 
+  
+
+ However this is when NOT using spring-boot-starter-web (eg tomcat, undertow) as it then uses Camel to keep the JVM running which it can stop nicely.              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 02/Mar/17 14:31 
+
+And you can combine that with seconds, to stop at first hit
+
+camel.springboot.main-run-controller-max-duration-messages=300
+camel.springboot.main-run-controller-max-duration-seconds=10
+
+ 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 02/Mar/17 14:31                    And you can combine that with seconds, to stop at first hit 
+  
+ camel.springboot.main-run-controller-max-duration-messages=300
+camel.springboot.main-run-controller-max-duration-seconds=10
+ 
+               
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 02/Mar/17 14:36 
+
+We can also make an idle setting, so if Camel has not processed any messages in N seconds it can auto shutdown 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 02/Mar/17 14:36                    We can also make an idle setting, so if Camel has not processed any messages in N seconds it can auto shutdown              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 02/Mar/17 14:38 
+
+It would be good to be able to shutdown Spring Boot in starter-web also. But I am not sure how to signal that to Spring so it shutdown tomcat/undertow as well. 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 02/Mar/17 14:38                    It would be good to be able to shutdown Spring Boot in starter-web also. But I am not sure how to signal that to Spring so it shutdown tomcat/undertow as well.              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 02/Mar/17 14:53 
+
+Ah found out how to do it with spring-boot 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 02/Mar/17 14:53                    Ah found out how to do it with spring-boot              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 02/Mar/17 16:08 
+
+Okay now only the idle functionality is missing. 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 02/Mar/17 16:08                    Okay now only the idle functionality is missing.              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 02/Mar/17 17:39 
+
+And we have idle as well
+#camel.springboot.duration-max-idle-seconds=15 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 02/Mar/17 17:39                    And we have idle as well 
+#camel.springboot.duration-max-idle-seconds=15              
+
+
+
+"
+10597,Bug,Resolved,Minor,Fixed,2.18.0,"2.17.5,                                            2.18.2,                                            2.19.0",camel-swagger,None,Unknown,Claus Ibsen,Bob Paulin,0,4,12/14/2016 14:42,12/15/2016 14:26,12/14/2016 15:31,"
+
+Assume I have rest path
+
+rest(""/test"").get().type(ClassA.class).to(""direct:someRoute"");
+
+rest(""/testSub"").get().type(ClassB.class).to(""direct:someOtherRoute"");
+
+
+And in the type ClassA contains a reference to ClassB.
+Within the Swagger Doc the path for ClassA renders as expected:
+
+/test:
+    get:
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/ClassA'
+
+
+However ClassB gets a string parameter scheme
+
+ 
+/testSub:
+    get:
+      responses:
+        200:
+          schema:
+             type : 'string'
+             format : 'com.ClassB'
+
+
+However I'd expect it to be:
+
+/testSub:
+    get:
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/ClassB'
+
+
+
+","
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 14/Dec/16 14:55 
+
+GitHub user bobpaulin opened a pull request:
+ https://github.com/apache/camel/pull/1348
+ CAMEL-10597 - Allow addition of x-className to empty VendorExtensions
+You can merge this pull request into a Git repository by running:
+    $ git pull https://github.com/bobpaulin/camel CAMEL-10597
+Alternatively you can review and apply these changes as the patch at:
+ https://github.com/apache/camel/pull/1348.patch
+To close this pull request, make a commit to your master/trunk branch
+with (at least) the following in the commit message:
+    This closes #1348
+
+ 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 14/Dec/16 14:55                    GitHub user bobpaulin opened a pull request: 
+
+      https://github.com/apache/camel/pull/1348  
+
+       CAMEL-10597   - Allow addition of x-className to empty VendorExtensions 
+
+
+
+ You can merge this pull request into a Git repository by running: 
+
+     $ git pull  https://github.com/bobpaulin/camel    CAMEL-10597   
+
+ Alternatively you can review and apply these changes as the patch at: 
+
+      https://github.com/apache/camel/pull/1348.patch  
+
+ To close this pull request, make a commit to your master/trunk branch 
+with (at least) the following in the commit message: 
+
+     This closes #1348 
+
+ 
+
+              
+
+
+
+
+
+
+
+
+ Bob Paulin
+ added a comment  - 14/Dec/16 14:56 
+
+PR included https://github.com/apache/camel/pull/1348 
+
+
+
+
+
+
+
+ Bob Paulin
+ added a comment  - 14/Dec/16 14:56                    PR included  https://github.com/apache/camel/pull/1348               
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 14/Dec/16 15:31 
+
+Thanks for the PR 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 14/Dec/16 15:31                    Thanks for the PR              
+
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 14/Dec/16 15:34 
+
+Github user bobpaulin closed the pull request at:
+ https://github.com/apache/camel/pull/1348 
+
+
+
+
+
+
+
+ ASF GitHub Bot
+ added a comment  - 14/Dec/16 15:34                    Github user bobpaulin closed the pull request at: 
+
+      https://github.com/apache/camel/pull/1348               
+
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 15/Dec/16 14:05 
+
+2.17.x is affected too davsclaus 
+
+
+
+
+
+
+
+ Andrea Cosentino
+ added a comment  - 15/Dec/16 14:05                    2.17.x is affected too  davsclaus               
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 15/Dec/16 14:26 
+
+Thanks its backported now 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 15/Dec/16 14:26                    Thanks its backported now              
+
+
+
+"
+10598,Task,Resolved,Major,Fixed,,2.19.0,camel-ehcache,None,Unknown,Luca Burgazzoli,Luca Burgazzoli,0,1,12/14/2016 15:23,12/14/2016 15:25,12/14/2016 15:25,,"
+
+    There are no comments yet on this issue.
+ "
+10599,New Feature,Resolved,Major,Fixed,,2.19.0,"camel-core,                                            tooling",None,Unknown,Claus Ibsen,Claus Ibsen,0,1,12/14/2016 17:18,12/19/2016 15:44,12/19/2016 15:44,"
+
+Some developers would like to keep a JVM running with Camel and then be able to edit a xml file with <camelContext> or <routes> and then have a file watcher automatic detect the file change and reload the routes.
+We can have some kind of functionality of that in camel-core for 3rd party to hook into. And then add it to mvn camel:run for some apps where you can quickly bootup a Camel JVM and then scan for file changes with reload.
+Mind that this will only work for Camel routes as its not for spring <bean> or OSGi <blueprint> etc as they have their own deployment model. But with the 3rd party hooks, then this may be a way of triggering mvn camel:run to trigger a osgi blueprint reload also when it runs in pojosr mode. Or a spring boot live reload etc.
+
+","
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 19/Dec/16 12:18 
+
+Darn the fancy file watcher API is dead-slow on OSX also for java 8
+http://stackoverflow.com/questions/9588737/is-java-7-watchservice-slow-for-anyone-else 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 19/Dec/16 12:18                    Darn the fancy file watcher API is dead-slow on OSX also for java 8 
+ http://stackoverflow.com/questions/9588737/is-java-7-watchservice-slow-for-anyone-else               
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 19/Dec/16 15:44 
+
+There is a feature now. We can always improve on it, and get some more community feedback 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 19/Dec/16 15:44                    There is a feature now. We can always improve on it, and get some more community feedback              
+
+
+
+"
+10600,Improvement,Resolved,Minor,Won't Fix,2.18.1,,camel-core,None,Unknown,Unassigned,Greg Vanore,0,2,12/14/2016 17:53,2/28/2017 10:51,2/28/2017 10:51,"
+
+I had noticed that IntrospectionSupport uses the type converter system, so was hoping to inject my application config POJOs and then have them converted to the appropriate type for certain properties where the configuration is on a per-object basis.
+My test setup was...
+
+... create a route, from(""file://tmp/test?noop=true&idempotentRepository=#foo"").
+... add a bean to my test registry, Runnable with name foo.
+... register a converter that took a Runnable and just hardcoded a MemoryIdempotentRepository as the result. I know this is strange but I just wanted to prove the conversion took place.
+
+Conversion didn't take place, so I set a breakpoint and took a look at IntrospectionSupport. (2.18.1) On lines 531-534, a little bit of logic makes sure that the reference is the exact type of the setter, or the setter is skipped. This effectively aborts type conversions for references.
+I did a casual check through history, looks like this was introduced around 2.13.0.
+The most obvious workaround for this is for us to use a CompositeRegistry and use an established nomenclature (e.g. accountName/idempotentRepository for us to do the fetch and conversion in one spot.
+If you deem this a non-feature, it would be nice to at least pass the parameter type to the CamelContextHelper#lookup utility. That way, when we write our custom registry, the lookups will supply a type hint (e.g. lookupByNameAndType instead of just lookupByName. Then we won't be forced to come up with a nomenclature that we have to parse, or we could choose to make a generic TypeConverterRegistry that does a lookup by name and then a mandatory conversion.
+
+","
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 16/Dec/16 10:19   - edited 
+
+This is not so idel to do a type conversion of the reference, as there may be overloaded setter methods and you need to find the best match to use first that are not doing unnecessary type conversions. 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 16/Dec/16 10:19   - edited                   This is not so idel to do a type conversion of the reference, as there may be overloaded setter methods and you need to find the best match to use first that are not doing unnecessary type conversions.              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 16/Dec/16 10:20 
+
+So maybe only if any of the regular setter didn't match nicely it can attempt a fallback with type conversion based on the parameter types of the setters. 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 16/Dec/16 10:20                    So maybe only if any of the regular setter didn't match nicely it can attempt a fallback with type conversion based on the parameter types of the setters.              
+
+
+
+
+
+
+
+
+ Greg Vanore
+ added a comment  - 16/Dec/16 20:22 
+
+I agree that doing a type conversion always is not ideal. A conversion as a fallback before giving up sounds good though. 
+
+
+
+
+
+
+
+ Greg Vanore
+ added a comment  - 16/Dec/16 20:22                    I agree that doing a type conversion always is not ideal. A conversion as a fallback before giving up sounds good though.              
+
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 28/Feb/17 10:51 
+
+Lets keep current behavior which works fine 
+
+
+
+
+
+
+
+ Claus Ibsen
+ added a comment  - 28/Feb/17 10:51                    Lets keep current behavior which works fine              
+
+
+
+"
