@@ -51,11 +51,12 @@ This file demonstrates the use of CIR.py to crawl multiple Jira issue reports wi
 This file provides an example of how to use CIR.py to crawl a specific Jira issue report and writes the data to a CSV file.
 
 **Output Example:**  
-- **example_issue_report.csv**
+- **example_issue_report.csv**  
 
-============================
+--------------------------------------
+
  **note: run the second and the third files to get the .csv files** 
-============================
+
 
 ## Dependencies (Python libraries)
 - requests
