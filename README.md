@@ -1,6 +1,4 @@
 # CIR: Crawling Issue Reports
-
-# GGHRstatistics: Get GitHub Repository statistics
 A crawler for parsing  and storing Jira issue reports
 
 ## .py files
