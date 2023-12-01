@@ -53,9 +53,9 @@ This file provides an example of how to use CIR.py to crawl a specific Jira issu
 **Output Example:**  
 - **example_issue_report.csv**
 
-
+============================
  **note: run the second and the third files to get the .csv files** 
-
+============================
 
 ## Dependencies (Python libraries)
 - requests
